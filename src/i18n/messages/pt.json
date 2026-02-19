@@ -1,0 +1,75 @@
+{
+  "Auth": {
+    "login": "Entrar",
+    "register": "Criar Conta",
+    "submit": "Entrar",
+
+    "links": {
+      "noAccount": "Não tem uma conta?",
+      "hasAccount": "Já tem uma conta?",
+      "forgotPassword": "Esqueceu a senha?"
+    },
+
+    "fields": {
+      "name": "Nome Completo",
+      "email": "E-mail",
+      "password": "Senha"
+    },
+
+    "placeholders": {
+      "name": "Digite seu nome",
+      "email": "Digite seu e-mail",
+      "password": "Digite sua senha"
+    },
+
+    "validation": {
+      "nameRequired": "O nome é obrigatório",
+      "emailRequired": "O e-mail é obrigatório",
+      "emailInvalid": "Digite um e-mail válido",
+      "passwordRequired": "A senha é obrigatória",
+      "passwordMin": "A senha deve ter pelo menos 6 caracteres"
+    },
+
+    "messages": {
+      "success": "Ação realizada com sucesso!",
+      "error": "Ocorreu um erro. Verifique a conexão com o servidor.",
+      "invalidCredentials": "E-mail ou senha inválidos",
+      "logout": "Saindo da conta..."
+    }
+  },
+
+  "Cars": {
+    "title": "Gerenciamento de Carros",
+    "addCar": "Adicionar Carro",
+    "empty": "Nenhum carro encontrado",
+
+    "fields": {
+      "brand": "Marca",
+      "model": "Modelo",
+      "color": "Cor",
+      "year": "Ano",
+      "createdAt": "Data de Criação",
+      "actions": "Ações"
+    },
+
+    "actions": {
+      "details": "Detalhes",
+      "edit": "Editar",
+      "delete": "Excluir"
+    },
+
+    "messages": {
+      "loading": "Carregando banco de dados...",
+      "success": "Carro salvo com sucesso!",
+      "deleted": "Carro removido com sucesso",
+      "error": "Erro ao processar operação"
+    }
+  },
+
+  "Common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "back": "Voltar"
+  }
+}

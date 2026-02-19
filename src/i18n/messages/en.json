@@ -1,0 +1,72 @@
+{
+  "Auth": {
+    "login": "Login",
+    "register": "Create Account",
+    "submit": "Continue",
+    "noAccount": "Don’t have an account?",
+    "hasAccount": "Already have an account?",
+    "forgotPassword": "Forgot your password?",
+
+    "fields": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "password": "Password"
+    },
+
+    "placeholders": {
+      "name": "Enter your full name",
+      "email": "Enter your email",
+      "password": "Enter your password"
+    },
+
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least 6 characters"
+    },
+
+    "messages": {
+      "success": "Action completed successfully!",
+      "error": "An error occurred. Check server connection.",
+      "invalidCredentials": "Invalid email or password",
+      "logout": "Logging out..."
+    }
+  },
+
+  "Cars": {
+    "title": "Car Management",
+    "addCar": "Add Car",
+    "empty": "No cars found.",
+
+    "fields": {
+      "brand": "Brand",
+      "model": "Model",
+      "color": "Color",
+      "year": "Year",
+      "createdAt": "Created At",
+      "actions": "Actions"
+    },
+
+    "actions": {
+      "details": "Details",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+
+    "messages": {
+      "loading": "Loading database...",
+      "success": "Car saved successfully!",
+      "deleted": "Car deleted successfully",
+      "error": "Error while processing request"
+    }
+  },
+
+  "Common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back"
+  }
+}
