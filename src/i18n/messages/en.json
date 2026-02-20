@@ -3,22 +3,21 @@
     "login": "Login",
     "register": "Create Account",
     "submit": "Continue",
-    "noAccount": "Don’t have an account?",
+    "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
+    "registerNow": "Register Now",
+    "loginNow": "Login now",
     "forgotPassword": "Forgot your password?",
-
     "fields": {
       "name": "Full Name",
       "email": "Email Address",
       "password": "Password"
     },
-
     "placeholders": {
       "name": "Enter your full name",
       "email": "Enter your email",
       "password": "Enter your password"
     },
-
     "validation": {
       "nameRequired": "Name is required",
       "emailRequired": "Email is required",
@@ -26,21 +25,25 @@
       "passwordRequired": "Password is required",
       "passwordMin": "Password must be at least 6 characters"
     },
-
     "messages": {
       "success": "Action completed successfully!",
       "error": "An error occurred. Check server connection.",
       "invalidCredentials": "Invalid email or password",
+      "invalidEmail": "Enter a valid email address",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "loading": "Loading...",
       "logout": "Logging out..."
     }
   },
-
   "Cars": {
     "title": "Car Management",
+    "detailsTitle": "Car Details",
+    "editTitle": "Edit Car",
     "addCar": "Add Car",
+    "searchPlaceholder": "Search by brand, model, color or year...",
     "empty": "No cars found.",
-
     "fields": {
+      "id": "ID",
       "brand": "Brand",
       "model": "Model",
       "color": "Color",
@@ -48,21 +51,27 @@
       "createdAt": "Created At",
       "actions": "Actions"
     },
-
     "actions": {
       "details": "Details",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "cancel": "Cancel"
     },
-
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
     "messages": {
       "loading": "Loading database...",
       "success": "Car saved successfully!",
       "deleted": "Car deleted successfully",
+      "deleteConfirm": "Are you sure you want to delete this vehicle?",
+      "deleteConfirmTitle": "Delete vehicle?",
+      "editDescription": "Update the vehicle information below.",
+      "detailsLoadError": "Error loading car details.",
       "error": "Error while processing request"
     }
   },
-
   "Common": {
     "loading": "Loading...",
     "save": "Save",

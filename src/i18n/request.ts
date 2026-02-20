@@ -1,18 +1,17 @@
-import { getRequestConfig } from 'next-intl/server';
-import { routing } from './routing';
+import { getRequestConfig } from "next-intl/server";
+import { routing } from "./routing";
+
+type AppLocale = (typeof routing.locales)[number];
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  // OBRIGATÓRIO: No Next.js 16, precisamos dar 'await' no locale
-  let locale = await requestLocale;
+  let locale = (await requestLocale) as AppLocale | undefined;
 
-  // Validação: Se o locale não for suportado, usa o padrão do seu routing.ts (en)
-  if (!locale || !routing.locales.includes(locale as any)) {
+  if (!locale || !routing.locales.includes(locale)) {
     locale = routing.defaultLocale;
   }
 
   return {
     locale,
-    // O import busca o JSON correspondente dentro de src/i18n/messages/
-    messages: (await import(`./messages/${locale}.json`)).default
+    messages: (await import(`./messages/${locale}.json`)).default,
   };
 });

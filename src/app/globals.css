@@ -1,13 +1,44 @@
 @import "tailwindcss";
 
 @theme {
+}
 
+:root {
+  --color-bg: #f3f4f6;
+  --color-surface: #ffffff;
+  --color-sidebar: #111827;
+  --color-accent: #facc15;
+  --color-highlight: #3b82f6;
+  --color-text: #111827;
+  --color-success: #22c55e;
+  --color-border: #d1d5db;
+  --color-muted: #6b7280;
+  --color-input-bg: #ffffff;
+  --color-input-text: #111827;
+  --color-input-border: #d1d5db;
+  --color-input-placeholder: #6b7280;
+}
+
+.dark {
+  --color-bg: #1a1c1e;
+  --color-surface: #2d3034;
+  --color-sidebar: #111827;
+  --color-accent: #facc15;
+  --color-highlight: #3b82f6;
+  --color-text: #f3f4f6;
+  --color-success: #22c55e;
+  --color-border: #3f444a;
+  --color-muted: #9ca3af;
+  --color-input-bg: #1f2937;
+  --color-input-text: #f3f4f6;
+  --color-input-border: #3f444a;
+  --color-input-placeholder: #9ca3af;
 }
 
 @layer base {
   body {
-    background-color: black;
-    color: white;
+    background-color: var(--color-bg);
+    color: var(--color-text);
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
@@ -15,13 +46,12 @@
   }
 }
 
-/* Estilo para inputs ficarem elegantes e legíveis no vídeo */
 input {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
+  background-color: var(--color-input-bg) !important;
+  border: 1px solid var(--color-input-border) !important;
+  color: var(--color-input-text) !important;
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-input-placeholder);
 }

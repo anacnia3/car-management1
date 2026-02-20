@@ -1,12 +1,12 @@
+import { AxiosError } from "axios";
 import { api } from "@/lib/api";
 import { LoginFormData } from "../schemas/login.schema";
 
+type ApiError = { message?: string };
+
 export async function login(data: LoginFormData) {
   try {
-    // Chamada para o endpoint /api/v1/auth/login
     const response = await api.post("/auth/login", data);
-    
-    // O seu Java retorna um objeto JwtToken { token: "string" }
     const { token } = response.data;
 
     if (token) {
@@ -14,9 +14,9 @@ export async function login(data: LoginFormData) {
     }
 
     return response.data;
-  } catch (error: any) {
-    // Captura erros do Spring Boot (ex: 401 Unauthorized)
-    const errorMessage = error.response?.data?.message || "Invalid credentials";
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError<ApiError>;
+    const errorMessage = axiosError.response?.data?.message || "Invalid credentials";
     throw new Error(errorMessage);
   }
 }

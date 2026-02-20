@@ -1,77 +1,134 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
-import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-
-import { CarTable } from "@/features/auth/components/cars/CarTable";
-import { LogoutButton } from "@/features/auth/components/LogoutButton";
-
-import { Button } from "@/components/ui/button";
-
 import { Plus, Car as CarIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { api } from "@/lib/api";
+import { CarTable } from "@/features/auth/components/cars/CarTable";
+import { CarForm } from "@/features/auth/components/cars/car-form";
+import { LogoutButton } from "@/features/auth/components/LogoutButton";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+type Car = {
+  id: number;
+  brand: string;
+  model: string;
+  color: string;
+  year: number;
+  createdAt?: string;
+};
+
+type CarsResponse =
+  | Car[]
+  | {
+      content: Car[];
+      totalPages: number;
+      number: number;
+      totalElements?: number;
+    };
+
+const PAGE_SIZE = 10;
 
 export default function CarsPage() {
   const t = useTranslations("Cars");
-  const { locale } = useParams();
+  const [page, setPage] = useState(0);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["cars"],
+    queryKey: ["cars", page, PAGE_SIZE],
     queryFn: async () => {
-      const response = await api.get("/cars");
+      const response = await api.get<CarsResponse>("/cars", {
+        params: { page, size: PAGE_SIZE },
+      });
       return response.data;
     },
   });
 
+  const content = Array.isArray(data) ? data : data?.content || [];
+  const currentPage = Array.isArray(data) ? 0 : data?.number ?? page;
+  const totalPages = Array.isArray(data) ? 1 : Math.max(data?.totalPages ?? 1, 1);
+
   return (
-    <main className="min-h-screen bg-[#0E1D26] p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        
-        {/* HEADER: Título à esquerda, Botões à direita */}
-        <header className="flex items-center justify-between border-b border-[#525859] pb-8">
-          
+    <main className="min-h-screen bg-[var(--color-bg)] p-4 md:p-8">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <header className="flex items-center justify-between border-b border-[var(--color-border)] pb-8">
           <div className="flex items-center gap-4">
-            <div className="bg-[#022873] p-3 rounded-lg text-white">
+            <div className="rounded-lg bg-[var(--color-sidebar)] p-3 text-[var(--color-accent)]">
               <CarIcon size={28} />
             </div>
-            <h1 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">
-              {t("title") || "Vehicle Management"}
+            <h1 className="text-2xl font-black uppercase tracking-tighter text-[var(--color-text)] md:text-3xl">
+              {t("title")}
             </h1>
           </div>
 
           <div className="flex items-center gap-4 md:gap-8">
-            {/* Botão de Adicionar */}
-            <Link href={`/${locale}/cars/create`}>
-              <Button className="bg-[#022873] hover:bg-[#022859] text-white font-bold h-11 px-6 flex gap-2 items-center transition-all">
-                <Plus size={20} />
-                <span className="hidden sm:inline">{t("addCar") || "Add Car"}</span>
-              </Button>
-            </Link>
+            <Button
+              type="button"
+              onClick={() => setIsCreateOpen(true)}
+              className="flex h-11 items-center gap-2 bg-[var(--color-accent)] px-6 font-bold text-[#111827] transition-all hover:brightness-95"
+            >
+              <Plus size={20} />
+              <span className="hidden sm:inline">{t("addCar")}</span>
+            </Button>
 
-            {/* Logout posicionado totalmente à direita */}
             <LogoutButton />
           </div>
         </header>
 
-        {/* LISTAGEM */}
-        <section>
+        <section className="space-y-4">
           {error && (
-            <div className="bg-red-900/20 border border-red-500 p-6 rounded-xl text-red-200 mb-6 font-mono text-sm">
+            <div className="mb-6 rounded-xl border border-red-500 bg-red-900/20 p-6 font-mono text-sm text-red-200">
               [System Error]: Java Backend not reachable on port 8080.
             </div>
           )}
 
           {isLoading ? (
             <div className="flex justify-center py-20">
-              <div className="w-10 h-10 border-4 border-[#022873] border-t-transparent rounded-full animate-spin"></div>
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--color-accent)] border-t-transparent" />
             </div>
           ) : (
-            <CarTable cars={data} />
+            <>
+              <CarTable cars={content} />
+
+              <div className="flex items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text)]">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                  disabled={currentPage <= 0}
+                  className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
+                >
+                  {t("pagination.previous")}
+                </Button>
+
+                <span className="text-[var(--color-muted)]">
+                  {currentPage + 1} / {totalPages}
+                </span>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                  disabled={currentPage >= totalPages - 1}
+                  className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
+                >
+                  {t("pagination.next")}
+                </Button>
+              </div>
+            </>
           )}
         </section>
 
+        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <DialogContent className="border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>{t("addCar")}</DialogTitle>
+            </DialogHeader>
+            <CarForm onSuccess={() => setIsCreateOpen(false)} />
+          </DialogContent>
+        </Dialog>
       </div>
     </main>
   );

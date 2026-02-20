@@ -1,19 +1,19 @@
 "use client";
 
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginFormData } from "../schemas/login.schema";
-import { useLogin } from "../hooks/useLogin";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useLogin } from "../hooks/useLogin";
+import { loginSchema, LoginFormData } from "../schemas/login.schema";
 
 export function LoginForm() {
   const t = useTranslations("Auth");
   const { locale } = useParams();
+  const localeValue = Array.isArray(locale) ? locale[0] : locale;
   const { mutate, isPending } = useLogin();
 
   const {
@@ -22,59 +22,53 @@ export function LoginForm() {
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: "onTouched", // Valida assim que o usuário sai do campo
+    mode: "onTouched",
   });
 
   const onSubmit = (data: LoginFormData) => {
-    // Se o Zod validar, esta função será chamada
     mutate(data);
   };
 
   return (
     <div className="space-y-6">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        
-      
         <div className="space-y-1 text-left">
-          <label className="text-sm font-bold text-white ml-1 uppercase tracking-wider">
+          <label className="ml-1 text-sm font-bold uppercase tracking-wider text-gray-700">
             {t("fields.email")}
           </label>
           <Input
             {...register("email")}
             type="email"
             placeholder="email@example.com"
-            
-            className="h-11 bg-white border-none !text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white/20"
+            className="h-11 border border-gray-300 bg-white text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300"
           />
-          {errors.email && (
-            <p className="text-[11px] text-red-400 font-bold ml-1 animate-pulse">
+          {errors.email?.message && (
+            <p className="ml-1 text-[11px] font-bold text-red-500">
               {t(errors.email.message)}
             </p>
           )}
         </div>
 
-        {/* Campo de Senha */}
         <div className="space-y-1 text-left">
-          <label className="text-sm font-bold text-white ml-1 uppercase tracking-wider">
+          <label className="ml-1 text-sm font-bold uppercase tracking-wider text-gray-700">
             {t("fields.password")}
           </label>
           <Input
             {...register("password")}
             type="password"
-            placeholder="••••••••"
-            className="h-11 bg-white border-none !text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-white/20"
+            placeholder="********"
+            className="h-11 border border-gray-300 bg-white text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300"
           />
-          {errors.password && (
-            <p className="text-[11px] text-red-400 font-bold ml-1 animate-pulse">
+          {errors.password?.message && (
+            <p className="ml-1 text-[11px] font-bold text-red-500">
               {t(errors.password.message)}
             </p>
           )}
         </div>
 
-  
-        <Button 
-          type="submit" 
-          className="w-full h-11 bg-black text-white hover:bg-zinc-900 transition-all font-bold rounded-lg mt-2 border border-white/10" 
+        <Button
+          type="submit"
+          className="mt-2 h-11 w-full rounded-lg border border-transparent bg-[var(--color-accent)] font-bold text-[#111827] transition-all hover:brightness-95"
           disabled={isPending}
         >
           {isPending ? (
@@ -88,12 +82,12 @@ export function LoginForm() {
         </Button>
       </form>
 
-      <div className="text-center pt-4 border-t border-white/10">
-        <p className="text-sm text-gray-300">
+      <div className="border-t border-gray-200 pt-4 text-center">
+        <p className="text-sm text-gray-600">
           {t("noAccount")}{" "}
-          <Link 
-            href={`/${locale}/register`} 
-            className="text-white font-bold hover:underline underline-offset-4 transition-colors"
+          <Link
+            href={`/${localeValue}/register`}
+            className="font-bold text-black transition-colors hover:underline"
           >
             {t("registerNow")}
           </Link>
