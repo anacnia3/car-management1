@@ -15,13 +15,13 @@ export function VideoHeroLayout({
   contentClassName,
 }: VideoHeroLayoutProps) {
   return (
-    <main className="fixed inset-0 overflow-hidden">
+    <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-black">
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute inset-0 z-0 h-full w-full rounded-none border-0 object-cover outline-none"
+        className="absolute inset-0 z-0 h-full w-full scale-125 object-cover md:scale-110"
       >
         <source src="/videos/login.mp4" type="video/mp4" />
       </video>
@@ -29,11 +29,11 @@ export function VideoHeroLayout({
       <div className={cn("absolute inset-0 z-10 bg-black/60", overlayClassName)} />
 
       <div className="pointer-events-none absolute inset-x-0 top-10 z-20 flex items-center justify-center gap-3 text-center">
-        <CarFront className="text-[var(--color-accent)]" size={150} />
-        <h1 className="text-4xl font-black tracking-tight text-white md:text-6xl">{title}</h1>
+        <CarFront className="text-[var(--color-accent)]" size={110} />
+        <h1 className="text-3xl font-black tracking-tight text-white md:text-5xl">{title}</h1>
       </div>
 
-      <div className={cn("relative z-30 flex min-h-full items-center justify-center px-6", contentClassName)}>
+      <div className={cn("relative z-30 flex min-h-dvh items-center justify-center px-6", contentClassName)}>
         {children}
       </div>
     </main>
