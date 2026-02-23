@@ -1,12 +1,12 @@
-import { LoginForm } from "@/features/auth/components/login-form";
-import { VideoHeroLayout } from "@/components/layout/VideoHeroLayout";
+﻿import { LoginForm } from "@/features/auth/components/login-form";
+import { HeroImageLayout } from "@/components/layout/HeroImageLayout";
 
 export default function LoginPage() {
   return (
-    <VideoHeroLayout overlayClassName="bg-black/55" contentClassName="px-4">
-        <div className="w-[400px] rounded-2xl bg-background/80 backdrop-blur p-6">
+    <HeroImageLayout overlayClassName="bg-black/55" contentClassName="px-4">
+        <div className="w-full max-w-[380px] rounded-2xl bg-white px-5 py-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
           <LoginForm />
         </div>
-    </VideoHeroLayout>
+    </HeroImageLayout>
   );
 }

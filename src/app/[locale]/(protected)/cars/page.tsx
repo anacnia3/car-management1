@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Plus, Car as CarIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { api } from "@/lib/api";
 import { CarTable } from "@/features/auth/components/cars/CarTable";
 import { CarForm } from "@/features/auth/components/cars/car-form";
 import { LogoutButton } from "@/features/auth/components/LogoutButton";
+import { AppHeader } from "@/components/layout/AppHeader";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -34,7 +35,9 @@ const PAGE_SIZE = 10;
 export default function CarsPage() {
   const t = useTranslations("Cars");
   const [page, setPage] = useState(0);
+  const [search, setSearch] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const isSearchActive = search.trim().length > 0;
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["cars", page, PAGE_SIZE],
@@ -46,24 +49,51 @@ export default function CarsPage() {
     },
   });
 
+  const { data: allCarsData = [], isLoading: isLoadingAllCars } = useQuery({
+    queryKey: ["cars", "all", PAGE_SIZE],
+    enabled: isSearchActive,
+    queryFn: async () => {
+      const firstPageResponse = await api.get<CarsResponse>("/cars", {
+        params: { page: 0, size: PAGE_SIZE },
+      });
+
+      const firstPageData = firstPageResponse.data;
+      if (Array.isArray(firstPageData)) {
+        return firstPageData;
+      }
+
+      const totalPages = Math.max(firstPageData.totalPages ?? 1, 1);
+      if (totalPages <= 1) {
+        return firstPageData.content || [];
+      }
+
+      const remainingRequests = Array.from({ length: totalPages - 1 }, (_, index) =>
+        api.get<CarsResponse>("/cars", {
+          params: { page: index + 1, size: PAGE_SIZE },
+        })
+      );
+
+      const remainingResponses = await Promise.all(remainingRequests);
+      const remainingCars = remainingResponses.flatMap((response) => {
+        const responseData = response.data;
+        return Array.isArray(responseData) ? responseData : responseData.content || [];
+      });
+
+      return [...(firstPageData.content || []), ...remainingCars];
+    },
+  });
+
   const content = Array.isArray(data) ? data : data?.content || [];
+  const carsForTable = isSearchActive && !isLoadingAllCars ? allCarsData : content;
   const currentPage = Array.isArray(data) ? 0 : data?.number ?? page;
   const totalPages = Array.isArray(data) ? 1 : Math.max(data?.totalPages ?? 1, 1);
 
   return (
     <main className="min-h-screen bg-[var(--color-bg)] p-4 md:p-8">
       <div className="mx-auto max-w-7xl space-y-8">
-        <header className="flex items-center justify-between border-b border-[var(--color-border)] pb-8">
-          <div className="flex items-center gap-4">
-            <div className="rounded-lg bg-[var(--color-sidebar)] p-3 text-[var(--color-accent)]">
-              <CarIcon size={28} />
-            </div>
-            <h1 className="text-2xl font-black uppercase tracking-tighter text-[var(--color-text)] md:text-3xl">
-              {t("title")}
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-4 md:gap-8">
+        <AppHeader
+          actions={
+            <>
             <Button
               type="button"
               onClick={() => setIsCreateOpen(true)}
@@ -74,13 +104,14 @@ export default function CarsPage() {
             </Button>
 
             <LogoutButton />
-          </div>
-        </header>
+            </>
+          }
+        />
 
         <section className="space-y-4">
           {error && (
             <div className="mb-6 rounded-xl border border-red-500 bg-red-900/20 p-6 font-mono text-sm text-red-200">
-              [System Error]: Java Backend not reachable on port 8080.
+              {t("systemError")}
             </div>
           )}
 
@@ -90,33 +121,35 @@ export default function CarsPage() {
             </div>
           ) : (
             <>
-              <CarTable cars={content} />
+              <CarTable cars={carsForTable} search={search} onSearchChange={setSearch} />
 
-              <div className="flex items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text)]">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                  disabled={currentPage <= 0}
-                  className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
-                >
-                  {t("pagination.previous")}
-                </Button>
+              {!isSearchActive && (
+                <div className="flex items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text)]">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                    disabled={currentPage <= 0}
+                    className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
+                  >
+                    {t("pagination.previous")}
+                  </Button>
 
-                <span className="text-[var(--color-muted)]">
-                  {currentPage + 1} / {totalPages}
-                </span>
+                  <span className="text-[var(--color-muted)]">
+                    {currentPage + 1} / {totalPages}
+                  </span>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
-                  disabled={currentPage >= totalPages - 1}
-                  className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
-                >
-                  {t("pagination.next")}
-                </Button>
-              </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                    disabled={currentPage >= totalPages - 1}
+                    className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
+                  >
+                    {t("pagination.next")}
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </section>

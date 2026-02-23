@@ -39,7 +39,7 @@ export function LoginForm() {
           <Input
             {...register("email")}
             type="email"
-            placeholder="email@example.com"
+            placeholder={t("placeholders.email")}
             className="h-11 border border-gray-300 bg-white text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300"
           />
           {errors.email?.message && (
@@ -56,7 +56,7 @@ export function LoginForm() {
           <Input
             {...register("password")}
             type="password"
-            placeholder="********"
+            placeholder={t("placeholders.password")}
             className="h-11 border border-gray-300 bg-white text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300"
           />
           {errors.password?.message && (

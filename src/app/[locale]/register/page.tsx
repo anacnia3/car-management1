@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { VideoHeroLayout } from "@/components/layout/VideoHeroLayout";
+import { HeroImageLayout } from "@/components/layout/HeroImageLayout";
 import { RegisterForm } from "@/features/auth/components/register-form";
 
 export default function RegisterPage() {
@@ -12,11 +12,11 @@ export default function RegisterPage() {
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
 
   return (
-    <VideoHeroLayout>
+    <HeroImageLayout>
       <div className="w-full max-w-[450px] rounded-2xl bg-white p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t("register")}</h1>
-          <p className="mt-2 text-sm text-gray-500">Create your account to manage your fleet.</p>
+          <p className="mt-2 text-sm text-gray-500">{t("registerSubtitle")}</p>
         </div>
 
         <RegisterForm />
@@ -31,6 +31,6 @@ export default function RegisterPage() {
           </Link>
         </div>
       </div>
-    </VideoHeroLayout>
+    </HeroImageLayout>
   );
 }

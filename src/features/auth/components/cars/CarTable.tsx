@@ -11,7 +11,6 @@ import { api } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -32,13 +31,18 @@ type Car = {
 
 type CarsData = Car[] | { content?: Car[] } | undefined;
 
-export function CarTable({ cars }: { cars: CarsData }) {
+type CarTableProps = {
+  cars: CarsData;
+  search: string;
+  onSearchChange: (value: string) => void;
+};
+
+export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
   const t = useTranslations("Cars");
   const queryClient = useQueryClient();
   const router = useRouter();
   const { locale } = useParams();
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
-  const [search, setSearch] = useState("");
   const [carToDelete, setCarToDelete] = useState<number | null>(null);
   const [carToEdit, setCarToEdit] = useState<Car | null>(null);
 
@@ -64,14 +68,14 @@ export function CarTable({ cars }: { cars: CarsData }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cars"] });
-      toast.success("Vehicle deleted successfully!", {
-        autoClose: 5000,
+      toast.success(t("messages.deleted"), {
+        autoClose: 3000,
         theme: "dark",
       });
       setCarToDelete(null);
     },
     onError: () => {
-      toast.error("Error deleting vehicle. Check backend connection.");
+      toast.error(t("messages.error"));
     },
   });
 
@@ -90,11 +94,11 @@ export function CarTable({ cars }: { cars: CarsData }) {
   };
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-2xl">
+    <div className="w-full overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-2xl dark:text-white">
       <div className="border-b border-[var(--color-border)] p-4">
         <Input
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
+          onChange={(event) => onSearchChange(event.target.value)}
           placeholder={t("searchPlaceholder")}
           className="h-10 border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] placeholder:text-[var(--color-muted)] focus-visible:ring-[var(--color-highlight)]"
         />
@@ -111,7 +115,7 @@ export function CarTable({ cars }: { cars: CarsData }) {
             <th className="p-4 text-right font-bold">{t("fields.actions")}</th>
           </tr>
         </thead>
-        <tbody className="text-[var(--color-muted)]">
+        <tbody className="text-[var(--color-muted)] dark:text-white">
           {filteredCars.map((car) => (
             <tr
               key={car.id}
@@ -121,8 +125,8 @@ export function CarTable({ cars }: { cars: CarsData }) {
               <td className="p-4">{car.model}</td>
               <td className="p-4">{car.color}</td>
               <td className="p-4">{car.year}</td>
-              <td className="p-4 text-xs italic">
-                {car.createdAt ? format(new Date(car.createdAt), "dd/MM/yyyy") : "N/A"}
+              <td className="p-4 text-xs font-bold">
+                {car.createdAt ? format(new Date(car.createdAt), "dd/MM/yyyy") : t("fields.notAvailable")}
               </td>
               <td className="p-4 text-right">
                 <div className="flex justify-end gap-3">
@@ -157,7 +161,7 @@ export function CarTable({ cars }: { cars: CarsData }) {
           ))}
           {filteredCars.length === 0 && (
             <tr>
-              <td colSpan={6} className="p-6 text-center text-sm text-[var(--color-muted)]">
+              <td colSpan={6} className="p-6 text-center text-sm text-[var(--color-muted)] dark:text-white">
                 {t("empty")}
               </td>
             </tr>
@@ -169,7 +173,7 @@ export function CarTable({ cars }: { cars: CarsData }) {
         <DialogContent className="border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)]">
           <DialogHeader>
             <DialogTitle>{t("messages.deleteConfirmTitle")}</DialogTitle>
-            <DialogDescription className="text-[var(--color-muted)]">
+            <DialogDescription className="text-[var(--color-muted)] dark:text-white">
               {t("messages.deleteConfirm")}
             </DialogDescription>
           </DialogHeader>
@@ -195,25 +199,14 @@ export function CarTable({ cars }: { cars: CarsData }) {
       </Dialog>
 
       <Dialog open={carToEdit !== null} onOpenChange={(open) => !open && setCarToEdit(null)}>
-        <DialogContent className="border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] sm:max-w-2xl">
+        <DialogContent className="border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] dark:text-white sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>{t("editTitle")}</DialogTitle>
-            <DialogDescription className="text-[var(--color-muted)]">
+            <DialogDescription className="text-[var(--color-muted)] dark:text-white">
               {t("messages.editDescription")}
             </DialogDescription>
           </DialogHeader>
           {carToEdit && <CarForm initialData={carToEdit} onSuccess={() => setCarToEdit(null)} />}
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                type="button"
-                variant="outline"
-                className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
-              >
-                {t("actions.cancel")}
-              </Button>
-            </DialogClose>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

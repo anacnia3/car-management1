@@ -16,7 +16,7 @@ export async function login(data: LoginFormData) {
     return response.data;
   } catch (error: unknown) {
     const axiosError = error as AxiosError<ApiError>;
-    const errorMessage = axiosError.response?.data?.message || "Invalid credentials";
+    const errorMessage = axiosError.response?.data?.message || "messages.invalidCredentials";
     throw new Error(errorMessage);
   }
 }

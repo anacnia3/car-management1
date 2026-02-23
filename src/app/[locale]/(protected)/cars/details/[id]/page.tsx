@@ -76,7 +76,7 @@ export default function CarDetailsPage() {
             <DetailItem label={tCars("fields.year")} value={String(data.year)} />
             <DetailItem
               label={tCars("fields.createdAt")}
-              value={data.createdAt ? format(new Date(data.createdAt), "dd/MM/yyyy") : "N/A"}
+              value={data.createdAt ? format(new Date(data.createdAt), "dd/MM/yyyy") : tCars("fields.notAvailable")}
             />
           </div>
         )}

@@ -3,10 +3,12 @@
 import { useRouter, useParams } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 
 export function LogoutButton() {
+  const t = useTranslations("Auth");
   const router = useRouter();
   const { locale } = useParams();
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
@@ -15,8 +17,8 @@ export function LogoutButton() {
     await signOut({ redirect: false });
     localStorage.removeItem("token");
 
-    toast.info("Logging out...", {
-      autoClose: 5000,
+    toast.info(t("messages.logout"), {
+      autoClose: 1000,
       theme: "dark",
     });
 
@@ -26,7 +28,8 @@ export function LogoutButton() {
   return (
     <Button
       onClick={handleLogout}
-      title="Logout"
+      title={t("logoutLabel")}
+      aria-label={t("logoutLabel")}
       className="flex items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] p-2.5 text-[var(--color-accent)] shadow-lg transition-transform hover:scale-110 hover:bg-[var(--color-sidebar)]"
     >
       <LogOut size={20} />

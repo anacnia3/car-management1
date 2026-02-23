@@ -1,25 +1,30 @@
 {
   "Auth": {
     "login": "Entrar",
-    "register": "Criar Conta",
+    "register": "Criar conta",
     "submit": "Entrar",
     "noAccount": "Não tem uma conta?",
     "hasAccount": "Já tem uma conta?",
     "registerNow": "Cadastre-se agora",
     "loginNow": "Entrar agora",
     "forgotPassword": "Esqueceu a senha?",
+    "loginTitle": "Entrar no Car Management",
+    "loginSubtitle": "Bem-vindo de volta! Informe seus dados.",
+    "registerSubtitle": "Crie sua conta para gerenciar sua frota.",
+    "logoutLabel": "Sair",
     "fields": {
-      "name": "Nome Completo",
+      "name": "Nome completo",
       "email": "E-mail",
       "password": "Senha"
     },
     "placeholders": {
-      "name": "Digite seu nome",
+      "name": "Digite seu nome completo",
       "email": "Digite seu e-mail",
       "password": "Digite sua senha"
     },
     "validation": {
       "nameRequired": "O nome é obrigatório",
+      "nameMin": "O nome deve ter pelo menos 3 caracteres",
       "emailRequired": "O e-mail é obrigatório",
       "emailInvalid": "Digite um e-mail válido",
       "passwordRequired": "A senha é obrigatória",
@@ -32,50 +37,71 @@
       "invalidEmail": "Digite um e-mail válido",
       "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
       "loading": "Carregando...",
+      "creatingAccount": "Criando conta...",
+      "loginSuccess": "Login realizado com sucesso!",
+      "registerSuccess": "Conta criada com sucesso!",
+      "registerError": "Erro ao criar conta",
       "logout": "Saindo da conta..."
     }
   },
   "Cars": {
-    "title": "Gerenciamento de Carros",
-    "detailsTitle": "Detalhes do Carro",
-    "editTitle": "Editar Carro",
-    "addCar": "Adicionar Carro",
+    "title": "Gerenciamento de carros",
+    "detailsTitle": "Detalhes do carro",
+    "editTitle": "Editar carro",
+    "addCar": "Adicionar carro",
+    "createTitle": "Adicionar novo carro",
     "searchPlaceholder": "Buscar por marca, modelo, cor ou ano...",
-    "empty": "Nenhum carro encontrado",
+    "empty": "Nenhum carro encontrado.",
+    "systemError": "Backend Java indisponível na porta 8080.",
     "fields": {
       "id": "ID",
       "brand": "Marca",
       "model": "Modelo",
       "color": "Cor",
       "year": "Ano",
-      "createdAt": "Data de Criação",
-      "actions": "Ações"
+      "createdAt": "Data de criação",
+      "actions": "Ações",
+      "notAvailable": "N/A"
     },
     "actions": {
       "details": "Detalhes",
       "edit": "Editar",
       "delete": "Excluir",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "save": "Salvar carro",
+      "update": "Atualizar carro"
     },
     "pagination": {
       "previous": "Anterior",
       "next": "Próximo"
     },
+    "validation": {
+      "required": "Obrigatório",
+      "brandRequired": "Marca é obrigatória",
+      "modelRequired": "Modelo é obrigatório",
+      "colorRequired": "Cor é obrigatória"
+    },
     "messages": {
       "loading": "Carregando banco de dados...",
+      "saving": "Salvando...",
       "success": "Carro salvo com sucesso!",
-      "deleted": "Carro removido com sucesso",
-      "deleteConfirm": "Tem certeza que deseja excluir este veículo?",
+      "deleted": "Veículo excluído com sucesso!",
+      "deleteConfirm": "Tem certeza de que deseja excluir este veículo?",
       "deleteConfirmTitle": "Excluir veículo?",
       "editDescription": "Atualize as informações do veículo abaixo.",
       "detailsLoadError": "Erro ao carregar detalhes do carro.",
-      "error": "Erro ao processar operação"
+      "error": "Erro ao processar operação",
+      "createSuccess": "Carro criado com sucesso!",
+      "createError": "Erro ao criar carro.",
+      "updateSuccess": "Carro atualizado com sucesso!",
+      "operationFailed": "A operação falhou"
     }
   },
   "Common": {
     "loading": "Carregando...",
     "save": "Salvar",
     "cancel": "Cancelar",
-    "back": "Voltar"
+    "back": "Voltar",
+    "close": "Fechar"
   }
 }

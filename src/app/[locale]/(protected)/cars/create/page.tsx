@@ -4,20 +4,22 @@ import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 import * as z from "zod";
 import { api } from "@/lib/api";
 
 const carSchema = z.object({
-  model: z.string().min(2, "Required"),
-  brand: z.string().min(2, "Required"),
-  color: z.string().min(2, "Required"),
+  model: z.string().min(2, "validation.required"),
+  brand: z.string().min(2, "validation.required"),
+  color: z.string().min(2, "validation.required"),
   year: z.number().min(1900).max(2027),
 });
 
 type CreateCarFormData = z.infer<typeof carSchema>;
 
 export default function CreateCarPage() {
+  const t = useTranslations("Cars");
   const { locale } = useParams();
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
   const router = useRouter();
@@ -31,38 +33,38 @@ export default function CreateCarPage() {
     mutationFn: (newCar: CreateCarFormData) => api.post("/cars", newCar),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cars"] });
-      toast.success("Car created successfully!");
+      toast.success(t("messages.createSuccess"));
       router.push(`/${localeValue}/cars`);
     },
-    onError: () => toast.error("Error creating car."),
+    onError: () => toast.error(t("messages.createError")),
   });
 
   return (
     <div className="min-h-screen bg-black p-8 text-white">
-      <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-8">
-        <h1 className="mb-6 text-2xl font-bold">Add New Car</h1>
+      <div className="mx-auto max-w-2x1 rounded-2x1 border border-white/10 bg-white/5 p-8">
+        <h1 className="mb-6 text-2xl font-bold">{t("createTitle")}</h1>
 
         <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <input
               {...register("brand")}
-              placeholder="Brand"
+              placeholder={t("fields.brand")}
               className="rounded-lg border border-white/10 bg-white/10 p-3 outline-none focus:border-white/40"
             />
             <input
               {...register("model")}
-              placeholder="Model"
+              placeholder={t("fields.model")}
               className="rounded-lg border border-white/10 bg-white/10 p-3 outline-none focus:border-white/40"
             />
             <input
               {...register("color")}
-              placeholder="Color"
+              placeholder={t("fields.color")}
               className="rounded-lg border border-white/10 bg-white/10 p-3 outline-none focus:border-white/40"
             />
             <input
               {...register("year", { valueAsNumber: true })}
               type="number"
-              placeholder="Year"
+              placeholder={t("fields.year")}
               className="rounded-lg border border-white/10 bg-white/10 p-3 outline-none focus:border-white/40"
             />
           </div>
@@ -72,14 +74,14 @@ export default function CreateCarPage() {
               type="submit"
               className="flex-1 rounded-lg bg-white p-3 font-bold text-black hover:bg-white/90"
             >
-              Save Car
+              {t("actions.save")}
             </button>
             <button
               type="button"
               onClick={() => router.push(`/${localeValue}/cars`)}
               className="flex-1 rounded-lg bg-white/10 p-3 text-white hover:bg-white/20"
             >
-              Cancel
+              {t("actions.cancel")}
             </button>
           </div>
         </form>

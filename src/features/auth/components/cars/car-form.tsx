@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const carSchema = z.object({
-  brand: z.string().min(2, "Brand is required"),
-  model: z.string().min(2, "Model is required"),
-  color: z.string().min(2, "Color is required"),
+  brand: z.string().min(2, "validation.brandRequired"),
+  model: z.string().min(2, "validation.modelRequired"),
+  color: z.string().min(2, "validation.colorRequired"),
   year: z.number().min(1886).max(new Date().getFullYear() + 1),
 });
 
@@ -56,12 +56,12 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cars"] });
-      toast.success(isEditing ? "Car updated!" : "Car created!");
+      toast.success(isEditing ? t("messages.updateSuccess") : t("messages.createSuccess"));
       onSuccess();
     },
     onError: (error: unknown) => {
       const axiosError = error as AxiosError<ApiError>;
-      toast.error(axiosError.response?.data?.message || "Operation failed");
+      toast.error(axiosError.response?.data?.message || t("messages.operationFailed"));
     },
   });
 
@@ -72,40 +72,40 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
     >
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
-          <label className="text-xs font-medium text-[var(--color-muted)]">{t("fields.brand")}</label>
+          <label className="text-xs font-medium text-[var(--color-muted)] dark:text-white">{t("fields.brand")}</label>
           <Input
             {...register("brand")}
-            className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)]"
+            className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] dark:text-white"
           />
-          {errors.brand && <p className="text-[10px] text-red-500">{errors.brand.message}</p>}
+          {errors.brand?.message && <p className="text-[10px] text-red-500">{t(errors.brand.message)}</p>}
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-medium text-[var(--color-muted)]">{t("fields.model")}</label>
+          <label className="text-xs font-medium text-[var(--color-muted)] dark:text-white">{t("fields.model")}</label>
           <Input
             {...register("model")}
-            className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)]"
+            className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] dark:text-white"
           />
-          {errors.model && <p className="text-[10px] text-red-500">{errors.model.message}</p>}
+          {errors.model?.message && <p className="text-[10px] text-red-500">{t(errors.model.message)}</p>}
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-medium text-[var(--color-muted)]">{t("fields.color")}</label>
+          <label className="text-xs font-medium text-[var(--color-muted)] dark:text-white">{t("fields.color")}</label>
           <Input
             {...register("color")}
-            className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)]"
+            className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] dark:text-white"
           />
-          {errors.color && <p className="text-[10px] text-red-500">{errors.color.message}</p>}
+          {errors.color?.message && <p className="text-[10px] text-red-500">{t(errors.color.message)}</p>}
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs font-medium text-[var(--color-muted)]">{t("fields.year")}</label>
+          <label className="text-xs font-medium text-[var(--color-muted)] dark:text-white">{t("fields.year")}</label>
           <Input
             {...register("year", { valueAsNumber: true })}
             type="number"
-            className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)]"
+            className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] dark:text-white"
           />
-          {errors.year && <p className="text-[10px] text-red-500">{errors.year.message}</p>}
+          {errors.year?.message && <p className="text-[10px] text-red-500">{errors.year.message}</p>}
         </div>
       </div>
 
@@ -116,14 +116,14 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
           onClick={onSuccess}
           className="text-[var(--color-text)] hover:bg-[var(--color-highlight)]/10"
         >
-          Cancel
+          {t("actions.cancel")}
         </Button>
         <Button
           type="submit"
           disabled={mutation.isPending}
           className="bg-[var(--color-accent)] font-bold text-[#111827] hover:brightness-95"
         >
-          {mutation.isPending ? "Saving..." : isEditing ? "Update Car" : "Save Car"}
+          {mutation.isPending ? t("messages.saving") : isEditing ? t("actions.update") : t("actions.save")}
         </Button>
       </div>
     </form>

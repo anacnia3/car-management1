@@ -1,25 +1,30 @@
 {
   "Auth": {
-    "login": "Login",
-    "register": "Create Account",
-    "submit": "Continue",
+    "login": "Log in",
+    "register": "Create account",
+    "submit": "Sign in",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "registerNow": "Register Now",
-    "loginNow": "Login now",
+    "loginNow": "Log in now",
     "forgotPassword": "Forgot your password?",
+    "loginTitle": "Login to Car Management",
+    "loginSubtitle": "Welcome back! Please enter your details.",
+    "registerSubtitle": "Create your account to manage your fleet.",
+    "logoutLabel": "Logout",
     "fields": {
       "name": "Full Name",
-      "email": "Email Address",
+      "email": "Email",
       "password": "Password"
     },
     "placeholders": {
       "name": "Enter your full name",
-      "email": "Enter your email",
+      "email": "Enter your email address",
       "password": "Enter your password"
     },
     "validation": {
       "nameRequired": "Name is required",
+      "nameMin": "Name must be at least 3 characters",
       "emailRequired": "Email is required",
       "emailInvalid": "Enter a valid email address",
       "passwordRequired": "Password is required",
@@ -27,11 +32,15 @@
     },
     "messages": {
       "success": "Action completed successfully!",
-      "error": "An error occurred. Check server connection.",
+      "error": "An error occurred. Check the server connection.",
       "invalidCredentials": "Invalid email or password",
       "invalidEmail": "Enter a valid email address",
       "passwordTooShort": "Password must be at least 6 characters",
       "loading": "Loading...",
+      "creatingAccount": "Creating account...",
+      "loginSuccess": "Login successful!",
+      "registerSuccess": "Account created successfully!",
+      "registerError": "Error while creating account",
       "logout": "Logging out..."
     }
   },
@@ -40,8 +49,10 @@
     "detailsTitle": "Car Details",
     "editTitle": "Edit Car",
     "addCar": "Add Car",
+    "createTitle": "Add new car",
     "searchPlaceholder": "Search by brand, model, color or year...",
     "empty": "No cars found.",
+    "systemError": "Backend unavailable (port 8080).",
     "fields": {
       "id": "ID",
       "brand": "Brand",
@@ -49,33 +60,48 @@
       "color": "Color",
       "year": "Year",
       "createdAt": "Created At",
-      "actions": "Actions"
+      "actions": "Actions",
+      "notAvailable": "N/A"
     },
     "actions": {
       "details": "Details",
       "edit": "Edit",
       "delete": "Delete",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "save": "Save Car",
+      "update": "Update Car"
     },
     "pagination": {
       "previous": "Previous",
       "next": "Next"
     },
+    "validation": {
+      "required": "Required",
+      "brandRequired": "Brand is required",
+      "modelRequired": "Model is required",
+      "colorRequired": "Color is required"
+    },
     "messages": {
-      "loading": "Loading database...",
+      "loading": "Loading data...",
+      "saving": "Saving...",
       "success": "Car saved successfully!",
-      "deleted": "Car deleted successfully",
+      "deleted": "Vehicle deleted successfully!",
       "deleteConfirm": "Are you sure you want to delete this vehicle?",
       "deleteConfirmTitle": "Delete vehicle?",
       "editDescription": "Update the vehicle information below.",
       "detailsLoadError": "Error loading car details.",
-      "error": "Error while processing request"
+      "error": "Error while processing request",
+      "createSuccess": "Car created successfully!",
+      "createError": "Error creating car.",
+      "updateSuccess": "Car updated!",
+      "operationFailed": "Operation failed"
     }
   },
   "Common": {
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
-    "back": "Back"
+    "back": "Back",
+    "close": "Close"
   }
 }

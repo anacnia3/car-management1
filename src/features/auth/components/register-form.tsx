@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const registerSchema = z.object({
-  name: z.string().min(3, "Name must be at least 3 characters"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().min(3, "validation.nameMin"),
+  email: z.string().email("validation.emailInvalid"),
+  password: z.string().min(6, "validation.passwordMin"),
 });
 
 type RegisterData = z.infer<typeof registerSchema>;
@@ -37,13 +37,13 @@ export function RegisterForm() {
   const onSubmit = async (data: RegisterData) => {
     try {
       await api.post("/auth/register", data);
-      toast.success("Account created successfully!", { autoClose: 5000 });
+      toast.success(t("messages.registerSuccess"), { autoClose: 3000 });
       router.push(`/${localeValue}/login`);
     } catch (error: unknown) {
       const axiosError = error as AxiosError<ApiError>;
       const errorMessage =
-        axiosError.response?.data?.message || "Error creating account";
-      toast.error(errorMessage, { autoClose: 5000 });
+        axiosError.response?.data?.message || t("messages.registerError");
+      toast.error(errorMessage, { autoClose: 3000 });
     }
   };
 
@@ -55,10 +55,12 @@ export function RegisterForm() {
         </label>
         <Input
           {...register("name")}
-          placeholder="Your Full Name"
+          placeholder={t("placeholders.name")}
           className="h-11 border border-gray-300 bg-white text-black"
         />
-        {errors.name && <p className="ml-1 text-[11px] font-medium text-red-500">{errors.name.message}</p>}
+        {errors.name?.message && (
+          <p className="ml-1 text-[11px] font-medium text-red-500">{t(errors.name.message)}</p>
+        )}
       </div>
 
       <div className="space-y-1">
@@ -67,11 +69,11 @@ export function RegisterForm() {
         </label>
         <Input
           {...register("email")}
-          placeholder="email@example.com"
+          placeholder={t("placeholders.email")}
           className="h-11 border border-gray-300 bg-white text-black"
         />
-        {errors.email && (
-          <p className="ml-1 text-[11px] font-medium text-red-500">{errors.email.message}</p>
+        {errors.email?.message && (
+          <p className="ml-1 text-[11px] font-medium text-red-500">{t(errors.email.message)}</p>
         )}
       </div>
 
@@ -82,11 +84,11 @@ export function RegisterForm() {
         <Input
           {...register("password")}
           type="password"
-          placeholder="********"
+          placeholder={t("placeholders.password")}
           className="h-11 border border-gray-300 bg-white text-black"
         />
-        {errors.password && (
-          <p className="ml-1 text-[11px] font-medium text-red-500">{errors.password.message}</p>
+        {errors.password?.message && (
+          <p className="ml-1 text-[11px] font-medium text-red-500">{t(errors.password.message)}</p>
         )}
       </div>
 
@@ -95,7 +97,7 @@ export function RegisterForm() {
         className="mt-2 h-11 w-full border border-transparent bg-[var(--color-accent)] font-bold text-[#111827] hover:brightness-95"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Creating Account..." : t("register")}
+        {isSubmitting ? t("messages.creatingAccount") : t("register")}
       </Button>
     </form>
   );

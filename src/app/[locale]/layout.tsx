@@ -4,9 +4,11 @@ import { AuthProvider } from "@/provider/auth-provider";
 import { ThemeProvider } from "@/provider/theme-provider";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Roboto } from "next/font/google";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { LanguageToggle } from "@/components/layout/LanguageToggle";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,6 +19,10 @@ const roboto = Roboto({
   weight: ["400", "500", "700", "900"],
   display: "swap",
 });
+
+export const metadata: Metadata = {
+  title: " CAR MANAGEMENT",
+};
 
 export default async function LocaleLayout({
   children,
@@ -41,10 +47,11 @@ export default async function LocaleLayout({
             <QueryProvider>
               <NextIntlClientProvider locale={locale} messages={messages}>
                 <ThemeToggle />
+                <LanguageToggle />
                 {children}
                 <ToastContainer
                   position="bottom-right"
-                  autoClose={5000}
+                  autoClose={500}
                   hideProgressBar={false}
                   newestOnTop={false}
                   closeOnClick
