@@ -30,7 +30,7 @@ type CarsResponse =
       totalElements?: number;
     };
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15;
 
 export default function CarsPage() {
   const t = useTranslations("Cars");

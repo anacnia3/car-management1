@@ -13,7 +13,7 @@ const carSchema = z.object({
   model: z.string().min(2, "validation.required"),
   brand: z.string().min(2, "validation.required"),
   color: z.string().min(2, "validation.required"),
-  year: z.number().min(1900).max(2027),
+  year: z.number().min(1886).max(new Date().getFullYear() + 1),
 });
 
 type CreateCarFormData = z.infer<typeof carSchema>;
@@ -41,7 +41,7 @@ export default function CreateCarPage() {
 
   return (
     <div className="min-h-screen bg-black p-8 text-white">
-      <div className="mx-auto max-w-2x1 rounded-2x1 border border-white/10 bg-white/5 p-8">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-8">
         <h1 className="mb-6 text-2xl font-bold">{t("createTitle")}</h1>
 
         <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-4">

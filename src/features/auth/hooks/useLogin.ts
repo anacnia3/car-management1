@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { getSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { LoginFormData } from "../schemas/login.schema";
@@ -21,11 +21,6 @@ export function useLogin() {
 
       if (!result || result.error) {
         throw new Error(result?.error || t("messages.invalidCredentials"));
-      }
-
-      const session = await getSession();
-      if (session?.accessToken) {
-        localStorage.setItem("token", session.accessToken);
       }
 
       return result;

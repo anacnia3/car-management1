@@ -1,15 +1,11 @@
 ﻿"use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
 import { LoginForm } from "@/features/auth/components/login-form";
 import { HeroImageLayout } from "@/components/layout/HeroImageLayout";
 
 export default function LoginPage() {
   const t = useTranslations("Auth");
-  const { locale } = useParams();
-  const localeValue = Array.isArray(locale) ? locale[0] : locale;
 
   return (
     <HeroImageLayout>
@@ -24,16 +20,6 @@ export default function LoginPage() {
           </div>
 
           <LoginForm />
-
-          <div className="mt-5 border-t border-gray-100 pt-4 text-center text-xs text-gray-600">
-            {t("noAccount")}{" "}
-            <Link
-              href={`/${localeValue}/register`}
-              className="font-bold text-blue-600 transition-all hover:underline"
-            >
-              {t("registerNow")}
-            </Link>
-          </div>
         </div>
     </HeroImageLayout>
   );

@@ -15,7 +15,6 @@ export function LogoutButton() {
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
-    localStorage.removeItem("token");
 
     toast.info(t("messages.logout"), {
       autoClose: 1000,

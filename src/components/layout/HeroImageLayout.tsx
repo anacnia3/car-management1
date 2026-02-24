@@ -52,7 +52,7 @@ export function HeroImageLayout({
             titleWrapperClassName
           )}
         >
-          <CarFront className="text-[var(--color-accent)]" size={90} />
+          <CarFront className="text-[var(--color-accent)]" size={100} />
           <h1 className={cn(poppins.className, "text-3xl font-black tracking-tight text-white md:text-5xl", titleClassName)}>
             {title}
           </h1>
