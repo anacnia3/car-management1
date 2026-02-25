@@ -9,8 +9,8 @@
     "loginNow": "Log in now",
     "forgotPassword": "Forgot your password?",
     "loginTitle": "Login to Car Management",
-    "loginSubtitle": "Welcome back! Please enter your details.",
-    "registerSubtitle": "Create your account to manage your fleet.",
+    "loginSubtitle": "Welcome! Please enter your details.",
+    "registerSubtitle": "Create your account.",
     "logoutLabel": "Logout",
     "fields": {
       "name": "Full Name",
@@ -32,7 +32,7 @@
     },
     "messages": {
       "success": "Action completed successfully!",
-      "error": "An error occurred. Check the server connection.",
+      "error": "An error occurred. Check the connection.",
       "invalidCredentials": "Invalid email or password",
       "invalidEmail": "Enter a valid email address",
       "passwordTooShort": "Password must be at least 6 characters",
@@ -82,7 +82,7 @@
       "colorRequired": "Color is required"
     },
     "messages": {
-      "loading": "Loading data...",
+      "loading": "Loading ...",
       "saving": "Saving...",
       "success": "Car saved successfully!",
       "deleted": "Vehicle deleted successfully!",

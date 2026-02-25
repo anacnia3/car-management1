@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid email or password");
+          throw new Error("messages.invalidCredentials");
         }
 
         try {
@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
 
           const token = response.data?.token;
           if (!token) {
-            throw new Error("Invalid email or password");
+            throw new Error("messages.invalidCredentials");
           }
 
           return {
@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
           };
         } catch (error: unknown) {
           const axiosError = error as AxiosError<ApiError>;
-          const message = axiosError.response?.data?.message || "Invalid email or password";
+          const message = axiosError.response?.data?.message || "messages.invalidCredentials";
           throw new Error(message);
         }
       },

@@ -32,6 +32,13 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
   const t = useTranslations("Cars");
   const queryClient = useQueryClient();
   const isEditing = !!initialData;
+  const resolveCarErrorMessage = (message?: string) => {
+    if (!message) return t("messages.operationFailed");
+    if (message.startsWith("messages.")) {
+      return t(message as "messages.operationFailed");
+    }
+    return t("messages.operationFailed");
+  };
 
   const {
     register,
@@ -61,7 +68,7 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
     },
     onError: (error: unknown) => {
       const axiosError = error as AxiosError<ApiError>;
-      toast.error(axiosError.response?.data?.message || t("messages.operationFailed"));
+      toast.error(resolveCarErrorMessage(axiosError.response?.data?.message));
     },
   });
 

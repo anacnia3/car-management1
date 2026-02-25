@@ -9,8 +9,8 @@
     "loginNow": "Entrar agora",
     "forgotPassword": "Esqueceu a senha?",
     "loginTitle": "Entrar no Car Management",
-    "loginSubtitle": "Bem-vindo de volta! Informe seus dados.",
-    "registerSubtitle": "Crie sua conta para gerenciar sua frota.",
+    "loginSubtitle": "Bem-vindo! Informe seus dados.",
+    "registerSubtitle": "Crie sua conta.",
     "logoutLabel": "Sair",
     "fields": {
       "name": "Nome completo",
@@ -32,7 +32,7 @@
     },
     "messages": {
       "success": "Ação realizada com sucesso!",
-      "error": "Ocorreu um erro. Verifique a conexão com o servidor.",
+      "error": "Ocorreu um erro. Verifique a conexão.",
       "invalidCredentials": "E-mail ou senha inválidos",
       "invalidEmail": "Digite um e-mail válido",
       "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
@@ -50,9 +50,9 @@
     "editTitle": "Editar carro",
     "addCar": "Adicionar carro",
     "createTitle": "Adicionar novo carro",
-    "searchPlaceholder": "Buscar por marca, modelo, cor ou ano...",
+    "searchPlaceholder": "Buscar por marca, modelo, cor ou ano",
     "empty": "Nenhum carro encontrado.",
-    "systemError": "Backend Java indisponível na porta 8080.",
+    "systemError": "Backend indisponível na porta 8080.",
     "fields": {
       "id": "ID",
       "brand": "Marca",
@@ -82,7 +82,7 @@
       "colorRequired": "Cor é obrigatória"
     },
     "messages": {
-      "loading": "Carregando banco de dados...",
+      "loading": "Carregando...",
       "saving": "Salvando...",
       "success": "Carro salvo com sucesso!",
       "deleted": "Veículo excluído com sucesso!",

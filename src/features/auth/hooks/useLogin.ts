@@ -30,7 +30,7 @@ export function useLogin() {
       return t("messages.invalidCredentials");
     }
 
-    return message;
+    return t("messages.invalidCredentials");
   };
 
   return useMutation({

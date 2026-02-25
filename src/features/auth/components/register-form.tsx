@@ -25,6 +25,13 @@ export function RegisterForm() {
   const { locale } = useParams();
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
   const router = useRouter();
+  const resolveRegisterErrorMessage = (message?: string) => {
+    if (!message) return t("messages.registerError");
+    if (message.startsWith("messages.")) {
+      return t(message as "messages.registerError");
+    }
+    return t("messages.registerError");
+  };
 
   const {
     register,
@@ -41,8 +48,7 @@ export function RegisterForm() {
       router.push(`/${localeValue}/login`);
     } catch (error: unknown) {
       const axiosError = error as AxiosError<ApiError>;
-      const errorMessage =
-        axiosError.response?.data?.message || t("messages.registerError");
+      const errorMessage = resolveRegisterErrorMessage(axiosError.response?.data?.message);
       toast.error(errorMessage, { autoClose: 3000 });
     }
   };
