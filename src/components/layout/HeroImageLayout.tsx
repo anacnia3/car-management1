@@ -1,4 +1,3 @@
-﻿import Image from "next/image";
 import { Poppins } from "next/font/google";
 import { CarFront } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,8 +10,7 @@ const poppins = Poppins({
 
 type HeroImageLayoutProps = {
   children: React.ReactNode;
-  imageSrc?: string;
-  imageAlt?: string;
+  videoSrc?: string;
   title?: string;
   showTitle?: boolean;
   titleClassName?: string;
@@ -23,8 +21,7 @@ type HeroImageLayoutProps = {
 
 export function HeroImageLayout({
   children,
-  imageSrc = "/images/auth-hero-v2.png",
-  imageAlt = "Background",
+  videoSrc,
   title = "CAR MANAGEMENT",
   showTitle = true,
   titleClassName,
@@ -34,16 +31,20 @@ export function HeroImageLayout({
 }: HeroImageLayoutProps) {
   return (
     <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-black">
-      <Image
-        src={imageSrc}
-        alt={imageAlt}
-        fill
-        priority
-        sizes="100vw"
-        className="absolute inset-0 z-0 h-full w-full object-cover"
-      />
+      {videoSrc ? (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 z-0 h-full w-full object-cover object-center"
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      ) : null}
 
-      <div className={cn("absolute inset-0 z-10 bg-black/50 backdrop-blur-[2px]", overlayClassName)} />
+      <div className={cn("absolute inset-0 z-10 bg-black/50", overlayClassName)} />
 
       {showTitle && (
         <div
