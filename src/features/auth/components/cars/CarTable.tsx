@@ -94,49 +94,49 @@ export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
   };
 
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-2xl dark:text-white">
-      <div className="border-b border-[var(--color-border)] p-4">
+    <div className="mx-auto w-[88%] overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-2xl dark:text-white sm:w-[84%] md:w-[76%] lg:w-[66%]">
+      <div className="border-b border-[var(--color-border)] p-3">
         <Input
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
           placeholder={t("searchPlaceholder")}
-          className="h-10 border border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] placeholder:text-[var(--color-muted)] focus-visible:ring-[var(--color-highlight)]"
+          className="h-9 border border-[var(--color-border)] bg-[var(--color-bg)] px-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-muted)] focus-visible:ring-[var(--color-highlight)]"
         />
       </div>
 
       <table className="w-full border-collapse text-left">
-        <thead className="bg-[#FDE047] text-[11px] uppercase tracking-widest text-[#111827]">
+        <thead className="bg-[#FDE047] text-[10px] uppercase tracking-widest text-[#111827] md:text-[11px]">
           <tr>
-            <th className="p-4 font-bold">{t("fields.brand")}</th>
-            <th className="p-4 font-bold">{t("fields.model")}</th>
-            <th className="p-4 font-bold">{t("fields.color")}</th>
-            <th className="p-4 font-bold">{t("fields.year")}</th>
-            <th className="p-4 font-bold">{t("fields.createdAt")}</th>
-            <th className="p-4 text-right font-bold">{t("fields.actions")}</th>
+            <th className="p-3 font-bold md:p-4">{t("fields.brand")}</th>
+            <th className="p-3 font-bold md:p-4">{t("fields.model")}</th>
+            <th className="p-3 font-bold md:p-4">{t("fields.color")}</th>
+            <th className="p-3 font-bold md:p-4">{t("fields.year")}</th>
+            <th className="p-3 font-bold md:p-4">{t("fields.createdAt")}</th>
+            <th className="p-3 text-right font-bold md:p-4">{t("fields.actions")}</th>
           </tr>
         </thead>
-        <tbody className="text-[var(--color-muted)] dark:text-white">
+        <tbody className="text-sm text-[var(--color-muted)] dark:text-white">
           {filteredCars.map((car) => (
             <tr
               key={car.id}
               className="border-b border-[var(--color-border)] transition-colors hover:bg-[var(--color-highlight)]/10"
             >
-              <td className="p-4 font-medium text-[var(--color-text)]">{car.brand}</td>
-              <td className="p-4">{car.model}</td>
-              <td className="p-4">{car.color}</td>
-              <td className="p-4">{car.year}</td>
-              <td className="p-4 text-xs font-bold">
+              <td className="p-3 font-medium text-[var(--color-text)] md:p-4">{car.brand}</td>
+              <td className="p-3 md:p-4">{car.model}</td>
+              <td className="p-3 md:p-4">{car.color}</td>
+              <td className="p-3 md:p-4">{car.year}</td>
+              <td className="p-3 text-[11px] font-bold md:p-4 md:text-xs">
                 {car.createdAt ? format(new Date(car.createdAt), "dd/MM/yyyy") : t("fields.notAvailable")}
               </td>
-              <td className="p-4 text-right">
-                <div className="flex justify-end gap-3">
+              <td className="p-3 text-right md:p-4">
+                <div className="flex justify-end gap-2 md:gap-3">
                   <button
                     onClick={() => handleDetails(car.id)}
                     className="cursor-pointer transition-all hover:text-[var(--color-highlight)]"
                     title={t("actions.details")}
                     aria-label={t("actions.details")}
                   >
-                    <Eye size={18} />
+                    <Eye size={16} />
                   </button>
                   <button
                     onClick={() => handleEdit(car.id)}
@@ -144,7 +144,7 @@ export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
                     title={t("actions.edit")}
                     aria-label={t("actions.edit")}
                   >
-                    <Pencil size={18} />
+                    <Pencil size={16} />
                   </button>
                   <button
                     onClick={() => setCarToDelete(car.id)}
@@ -153,7 +153,7 @@ export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
                     title={t("actions.delete")}
                     aria-label={t("actions.delete")}
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
               </td>

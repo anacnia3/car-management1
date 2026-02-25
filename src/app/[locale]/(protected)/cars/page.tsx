@@ -97,9 +97,9 @@ export default function CarsPage() {
             <Button
               type="button"
               onClick={() => setIsCreateOpen(true)}
-              className="flex h-11 items-center gap-2 bg-[var(--color-accent)] px-6 font-bold text-[#111827] transition-all hover:brightness-95"
+              className="flex h-9 items-center gap-2 bg-[var(--color-accent)] px-4 text-sm font-bold text-[#111827] transition-all hover:brightness-95"
             >
-              <Plus size={20} />
+              <Plus size={16} />
               <span className="hidden sm:inline">{t("addCar")}</span>
             </Button>
 
@@ -124,13 +124,13 @@ export default function CarsPage() {
               <CarTable cars={carsForTable} search={search} onSearchChange={setSearch} />
 
               {!isSearchActive && (
-                <div className="flex items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 text-sm text-[var(--color-text)]">
+                <div className="mx-auto flex w-[88%] items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-sm text-[var(--color-text)] sm:w-[84%] md:w-[76%] lg:w-[66%]">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                     disabled={currentPage <= 0}
-                    className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
+                    className="h-9 border-[var(--color-border)] bg-transparent px-3 text-xs text-[var(--color-text)] hover:bg-[var(--color-highlight)] sm:text-sm"
                   >
                     {t("pagination.previous")}
                   </Button>
@@ -144,7 +144,7 @@ export default function CarsPage() {
                     variant="outline"
                     onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
                     disabled={currentPage >= totalPages - 1}
-                    className="border-[var(--color-border)] bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]"
+                    className="h-9 border-[var(--color-border)] bg-transparent px-3 text-xs text-[var(--color-text)] hover:bg-[var(--color-highlight)] sm:text-sm"
                   >
                     {t("pagination.next")}
                   </Button>

@@ -23,11 +23,11 @@ export function ThemeToggle() {
     <Button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="fixed right-4 top-4 z-50 h-10 w-10 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] p-0 text-[var(--color-text)] shadow-md hover:bg-[var(--color-highlight)]/20"
+      className="fixed right-4 top-4 z-50 h-9 w-9 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] p-0 text-[var(--color-text)] shadow-md hover:bg-[var(--color-highlight)]/20"
       title={title}
       aria-label={title}
     >
-      {mounted ? (isDark ? <Sun size={18} /> : <Moon size={18} />) : <Moon size={18} />}
+      {mounted ? (isDark ? <Sun size={16} /> : <Moon size={16} />) : <Moon size={16} />}
     </Button>
   );
 }

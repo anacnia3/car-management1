@@ -26,7 +26,7 @@ export function LanguageToggle() {
   };
 
   return (
-    <div className="fixed right-16 top-4 z-50 flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] p-1 shadow-md">
+    <div className="fixed right-14 top-4 z-50 flex items-center gap-1 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] p-0.5 shadow-md">
       {locales.map(({ code, label }) => {
         const isActive = code === locale;
 
@@ -37,7 +37,7 @@ export function LanguageToggle() {
             onClick={() => changeLocale(code)}
             aria-pressed={isActive}
             className={cn(
-              "h-8 min-w-10 rounded-full px-3 text-xs font-bold",
+              "h-7 min-w-9 rounded-full px-2.5 text-[11px] font-bold",
               isActive
                 ? "bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent)]"
                 : "bg-transparent text-[var(--color-text)] hover:bg-[var(--color-highlight)]/20"

@@ -30,17 +30,17 @@ export function LoginForm() {
   };
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        <div className="space-y-1 text-left">
-          <label className="ml-1 text-sm font-bold uppercase tracking-wider text-gray-700">
+    <div className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+        <div className="space-y-0.5 text-left">
+          <label className="ml-1 text-[11px] font-bold uppercase tracking-wider text-gray-700 md:text-xs">
             {t("fields.email")}
           </label>
           <Input
             {...register("email")}
             type="email"
             placeholder={t("placeholders.email")}
-            className="h-11 border border-gray-300 bg-white text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300"
+            className="h-9 border border-gray-300 bg-white px-3 text-xs text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300 md:text-sm"
           />
           {errors.email?.message && (
             <p className="ml-1 text-[11px] font-bold text-red-500">
@@ -49,15 +49,15 @@ export function LoginForm() {
           )}
         </div>
 
-        <div className="space-y-1 text-left">
-          <label className="ml-1 text-sm font-bold uppercase tracking-wider text-gray-700">
+        <div className="space-y-0.5 text-left">
+          <label className="ml-1 text-[11px] font-bold uppercase tracking-wider text-gray-700 md:text-xs">
             {t("fields.password")}
           </label>
           <Input
             {...register("password")}
             type="password"
             placeholder={t("placeholders.password")}
-            className="h-11 border border-gray-300 bg-white text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300"
+            className="h-9 border border-gray-300 bg-white px-3 text-xs text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300 md:text-sm"
           />
           {errors.password?.message && (
             <p className="ml-1 text-[11px] font-bold text-red-500">
@@ -68,7 +68,7 @@ export function LoginForm() {
 
         <Button
           type="submit"
-          className="mt-2 h-11 w-full rounded-lg border border-transparent bg-[var(--color-accent)] font-bold text-[#111827] transition-all hover:brightness-95"
+          className="mt-1 h-9 w-full rounded-md border border-transparent bg-[var(--color-accent)] text-xs font-bold text-[#111827] transition-all hover:brightness-95 md:text-sm"
           disabled={isPending}
         >
           {isPending ? (
@@ -82,8 +82,8 @@ export function LoginForm() {
         </Button>
       </form>
 
-      <div className="border-t border-gray-200 pt-4 text-center">
-        <p className="text-sm text-gray-600">
+      <div className="border-t border-gray-200 pt-2.5 text-center">
+        <p className="text-[11px] text-gray-600 md:text-xs">
           {t("noAccount")}{" "}
           <Link
             href={`/${localeValue}/register`}

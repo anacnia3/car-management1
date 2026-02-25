@@ -29,9 +29,9 @@ export function LogoutButton() {
       onClick={handleLogout}
       title={t("logoutLabel")}
       aria-label={t("logoutLabel")}
-      className="flex items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] p-2.5 text-[var(--color-accent)] shadow-lg transition-transform hover:scale-110 hover:bg-[var(--color-sidebar)]"
+      className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] p-0 text-[var(--color-accent)] shadow-lg transition-transform hover:scale-110 hover:bg-[var(--color-sidebar)]"
     >
-      <LogOut size={20} />
+      <LogOut size={16} />
     </Button>
   );
 }
