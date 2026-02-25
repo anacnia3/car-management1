@@ -34,7 +34,7 @@ export default function CarDetailsPage() {
 
   return (
     <main className="min-h-screen bg-[var(--color-bg)] p-4 md:p-8">
-      <div className="mx-auto max-w-3xl space-y-6">
+      <div className="mx-auto w-[88%] space-y-6 sm:w-[84%] md:w-[76%] lg:w-[66%]">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-black uppercase tracking-tight text-[var(--color-text)]">
             {tCars("detailsTitle")}
