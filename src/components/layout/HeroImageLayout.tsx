@@ -8,9 +8,15 @@ const poppins = Poppins({
   display: "swap",
 });
 
+type HeroVideoSource = {
+  src: string;
+  type?: "video/mp4" | "video/webm" | "video/ogg";
+};
+
 type HeroImageLayoutProps = {
   children: React.ReactNode;
   videoSrc?: string;
+  videoSources?: HeroVideoSource[];
   title?: string;
   showTitle?: boolean;
   titleClassName?: string;
@@ -22,6 +28,7 @@ type HeroImageLayoutProps = {
 export function HeroImageLayout({
   children,
   videoSrc,
+  videoSources,
   title = "CAR MANAGEMENT",
   showTitle = true,
   titleClassName,
@@ -29,18 +36,28 @@ export function HeroImageLayout({
   overlayClassName,
   contentClassName,
 }: HeroImageLayoutProps) {
+  const resolvedVideoSources =
+    videoSources && videoSources.length > 0
+      ? videoSources
+      : videoSrc
+        ? [{ src: videoSrc, type: "video/mp4" as const }]
+        : [];
+
   return (
     <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-black">
-      {videoSrc ? (
+      {resolvedVideoSources.length > 0 ? (
         <video
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          className="absolute inset-0 z-0 h-full w-full object-cover object-center"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center"
         >
-          <source src={videoSrc} type="video/mp4" />
+          {resolvedVideoSources.map((source) => (
+            <source key={`${source.src}-${source.type ?? "default"}`} src={source.src} type={source.type} />
+          ))}
         </video>
       ) : null}
 

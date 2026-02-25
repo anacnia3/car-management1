@@ -22,6 +22,11 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: " CAR MANAGEMENT",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default async function LocaleLayout({

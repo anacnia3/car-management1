@@ -10,7 +10,7 @@ export default function LoginPage() {
   return (
     <HeroImageLayout
       videoSrc="/videos/login.mp4"
-      overlayClassName="bg-black/30"
+      overlayClassName="bg-black/40"
       titleWrapperClassName="top-10 gap-2 md:top-12 [&>svg]:size-10 md:[&>svg]:size-12"
       titleClassName="text-lg md:text-2xl"
       contentClassName="items-center justify-center pt-8 md:pt-10"

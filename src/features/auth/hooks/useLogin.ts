@@ -11,6 +11,28 @@ export function useLogin() {
   const { locale } = useParams();
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
 
+  const resolveLoginErrorMessage = (message?: string) => {
+    if (!message) return t("messages.invalidCredentials");
+
+    if (message.startsWith("messages.")) {
+      return t(message as "messages.invalidCredentials");
+    }
+
+    const nextAuthErrors = new Set([
+      "CredentialsSignin",
+      "AccessDenied",
+      "CallbackRouteError",
+      "Configuration",
+      "Verification",
+    ]);
+
+    if (nextAuthErrors.has(message)) {
+      return t("messages.invalidCredentials");
+    }
+
+    return message;
+  };
+
   return useMutation({
     mutationFn: async (data: LoginFormData) => {
       const result = await signIn("credentials", {
@@ -20,7 +42,7 @@ export function useLogin() {
       });
 
       if (!result || result.error) {
-        throw new Error(result?.error || t("messages.invalidCredentials"));
+        throw new Error(result?.error || "messages.invalidCredentials");
       }
 
       return result;
@@ -31,9 +53,8 @@ export function useLogin() {
       router.refresh();
     },
     onError: (error: unknown) => {
-      const errorMessage =
-        error instanceof Error ? error.message : t("messages.invalidCredentials");
-      toast.error(errorMessage);
+      const rawMessage = error instanceof Error ? error.message : undefined;
+      toast.error(resolveLoginErrorMessage(rawMessage));
     },
   });
 }
