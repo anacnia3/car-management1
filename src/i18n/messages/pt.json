@@ -15,12 +15,14 @@
     "fields": {
       "name": "Nome completo",
       "email": "E-mail",
-      "password": "Senha"
+      "password": "Senha",
+      "confirmPassword": "Confirmar senha"
     },
     "placeholders": {
       "name": "Digite seu nome completo",
       "email": "Digite seu e-mail",
-      "password": "Digite sua senha"
+      "password": "Digite sua senha",
+      "confirmPassword": "Confirme sua senha"
     },
     "validation": {
       "nameRequired": "O nome é obrigatório",
@@ -28,7 +30,9 @@
       "emailRequired": "O e-mail é obrigatório",
       "emailInvalid": "Digite um e-mail válido",
       "passwordRequired": "A senha é obrigatória",
-      "passwordMin": "A senha deve ter pelo menos 6 caracteres"
+      "passwordMin": "A senha deve ter pelo menos 6 caracteres",
+      "confirmPasswordRequired": "A confirmacao de senha e obrigatoria",
+      "passwordsDoNotMatch": "As senhas nao coincidem"
     },
     "messages": {
       "success": "Ação realizada com sucesso!",
@@ -73,13 +77,18 @@
     },
     "pagination": {
       "previous": "Anterior",
-      "next": "Próximo"
+      "next": "Próximo",
+      "itemsPerPage": "Itens por pagina",
+      "show": "Mostrar:",
+      "showing": "Mostrando {visible} de {total}"
     },
     "validation": {
       "required": "Obrigatório",
       "brandRequired": "Marca é obrigatória",
       "modelRequired": "Modelo é obrigatório",
-      "colorRequired": "Cor é obrigatória"
+      "colorRequired": "Cor é obrigatória",
+      "yearRequired": "Ano obrigatorio",
+      "yearInvalid": "Ano invalido"
     },
     "messages": {
       "loading": "Carregando...",
@@ -95,6 +104,9 @@
       "createError": "Erro ao criar carro.",
       "updateSuccess": "Carro atualizado com sucesso!",
       "operationFailed": "A operação falhou"
+    },
+    "filters": {
+      "all": "Todos os campos"
     }
   },
   "Common": {

@@ -6,25 +6,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-import * as z from "zod";
-import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const registerSchema = z.object({
-  name: z.string().min(3, "validation.nameMin"),
-  email: z.string().email("validation.emailInvalid"),
-  password: z.string().min(6, "validation.passwordMin"),
-});
-
-type RegisterData = z.infer<typeof registerSchema>;
-type ApiError = { message?: string };
+import { registerSchema, RegisterData } from "@/features/auth/schemas/register.schema";
+import { ApiError } from "@/features/auth/types/api.types";
+import { useRegisterMutation } from "@/features/auth/hooks/useRegisterMutation";
 
 export function RegisterForm() {
   const t = useTranslations("Auth");
   const { locale } = useParams();
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
   const router = useRouter();
+  const registerMutation = useRegisterMutation();
   const resolveRegisterErrorMessage = (message?: string) => {
     if (!message) return t("messages.registerError");
     if (message.startsWith("messages.")) {
@@ -43,7 +36,9 @@ export function RegisterForm() {
 
   const onSubmit = async (data: RegisterData) => {
     try {
-      await api.post("/auth/register", data);
+      const { confirmPassword, ...payload } = data;
+      void confirmPassword;
+      await registerMutation.mutateAsync(payload);
       toast.success(t("messages.registerSuccess"), { autoClose: 3000 });
       router.push(`/${localeValue}/login`);
     } catch (error: unknown) {
@@ -54,56 +49,95 @@ export function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
       <div className="space-y-1">
-        <label className="ml-1 text-sm font-bold uppercase text-gray-700">
+        <label htmlFor="register-name" className="ml-1 text-sm font-bold uppercase text-[var(--color-muted)]">
           {t("fields.name")}
         </label>
         <Input
+          id="register-name"
           {...register("name")}
+          autoComplete="name"
           placeholder={t("placeholders.name")}
-          className="h-11 border border-gray-300 bg-white text-black"
+          className="h-11 border border-[var(--color-border)] bg-[var(--color-input-bg)] text-[var(--color-input-text)] placeholder:text-[var(--color-input-placeholder)]"
+          aria-invalid={!!errors.name}
+          aria-describedby={errors.name ? "register-name-error" : undefined}
         />
         {errors.name?.message && (
-          <p className="ml-1 text-[11px] font-medium text-red-500">{t(errors.name.message)}</p>
+          <p id="register-name-error" className="ml-1 text-[11px] font-medium text-red-500">
+            {t(errors.name.message)}
+          </p>
         )}
       </div>
 
       <div className="space-y-1">
-        <label className="ml-1 text-sm font-bold uppercase text-gray-700">
+        <label htmlFor="register-email" className="ml-1 text-sm font-bold uppercase text-[var(--color-muted)]">
           {t("fields.email")}
         </label>
         <Input
+          id="register-email"
           {...register("email")}
+          autoComplete="email"
           placeholder={t("placeholders.email")}
-          className="h-11 border border-gray-300 bg-white text-black"
+          className="h-11 border border-[var(--color-border)] bg-[var(--color-input-bg)] text-[var(--color-input-text)] placeholder:text-[var(--color-input-placeholder)]"
+          aria-invalid={!!errors.email}
+          aria-describedby={errors.email ? "register-email-error" : undefined}
         />
         {errors.email?.message && (
-          <p className="ml-1 text-[11px] font-medium text-red-500">{t(errors.email.message)}</p>
+          <p id="register-email-error" className="ml-1 text-[11px] font-medium text-red-500">
+            {t(errors.email.message)}
+          </p>
         )}
       </div>
 
       <div className="space-y-1">
-        <label className="ml-1 text-sm font-bold uppercase text-gray-700">
+        <label htmlFor="register-password" className="ml-1 text-sm font-bold uppercase text-[var(--color-muted)]">
           {t("fields.password")}
         </label>
         <Input
+          id="register-password"
           {...register("password")}
           type="password"
+          autoComplete="new-password"
           placeholder={t("placeholders.password")}
-          className="h-11 border border-gray-300 bg-white text-black"
+          className="h-11 border border-[var(--color-border)] bg-[var(--color-input-bg)] text-[var(--color-input-text)] placeholder:text-[var(--color-input-placeholder)]"
+          aria-invalid={!!errors.password}
+          aria-describedby={errors.password ? "register-password-error" : undefined}
         />
         {errors.password?.message && (
-          <p className="ml-1 text-[11px] font-medium text-red-500">{t(errors.password.message)}</p>
+          <p id="register-password-error" className="ml-1 text-[11px] font-medium text-red-500">
+            {t(errors.password.message)}
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-1">
+        <label htmlFor="register-confirm-password" className="ml-1 text-sm font-bold uppercase text-[var(--color-muted)]">
+          {t("fields.confirmPassword")}
+        </label>
+        <Input
+          id="register-confirm-password"
+          {...register("confirmPassword")}
+          type="password"
+          autoComplete="new-password"
+          placeholder={t("placeholders.confirmPassword")}
+          className="h-11 border border-[var(--color-border)] bg-[var(--color-input-bg)] text-[var(--color-input-text)] placeholder:text-[var(--color-input-placeholder)]"
+          aria-invalid={!!errors.confirmPassword}
+          aria-describedby={errors.confirmPassword ? "register-confirm-password-error" : undefined}
+        />
+        {errors.confirmPassword?.message && (
+          <p id="register-confirm-password-error" className="ml-1 text-[11px] font-medium text-red-500">
+            {t(errors.confirmPassword.message)}
+          </p>
         )}
       </div>
 
       <Button
         type="submit"
         className="mt-2 h-11 w-full border border-transparent bg-[var(--color-accent)] font-bold text-[#111827] hover:brightness-95"
-        disabled={isSubmitting}
+        disabled={isSubmitting || registerMutation.isPending}
       >
-        {isSubmitting ? t("messages.creatingAccount") : t("register")}
+        {isSubmitting || registerMutation.isPending ? t("messages.creatingAccount") : t("register")}
       </Button>
     </form>
   );

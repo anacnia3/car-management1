@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { Roboto } from "next/font/google";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { LanguageToggle } from "@/components/layout/LanguageToggle";
+import { GlobalHeader } from "@/components/layout/GlobalHeader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -53,6 +54,7 @@ export default async function LocaleLayout({
               <NextIntlClientProvider locale={locale} messages={messages}>
                 <ThemeToggle />
                 <LanguageToggle />
+                <GlobalHeader />
                 {children}
                 <ToastContainer
                   position="bottom-right"

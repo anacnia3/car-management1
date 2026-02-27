@@ -1,112 +1,54 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { api } from "@/lib/api";
 import { CarTable } from "@/features/auth/components/cars/CarTable";
 import { CarForm } from "@/features/auth/components/cars/car-form";
+import { useCarsQuery } from "@/features/auth/hooks/useCarsQuery";
+import { SearchField } from "@/features/auth/types/cars.types";
 import { LogoutButton } from "@/features/auth/components/LogoutButton";
-import { AppHeader } from "@/components/layout/AppHeader";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-type Car = {
-  id: number;
-  brand: string;
-  model: string;
-  color: string;
-  year: number;
-  createdAt?: string;
-};
-
-type CarsResponse =
-  | Car[]
-  | {
-      content: Car[];
-      totalPages: number;
-      number: number;
-      totalElements?: number;
-    };
-
-const PAGE_SIZE = 10;
 
 export default function CarsPage() {
   const t = useTranslations("Cars");
   const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
+  const [searchField, setSearchField] = useState<SearchField>("all");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const isSearchActive = search.trim().length > 0;
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["cars", page, PAGE_SIZE],
-    queryFn: async () => {
-      const response = await api.get<CarsResponse>("/cars", {
-        params: { page, size: PAGE_SIZE },
-      });
-      return response.data;
-    },
-  });
-
-  const { data: allCarsData = [], isLoading: isLoadingAllCars } = useQuery({
-    queryKey: ["cars", "all", PAGE_SIZE],
-    enabled: isSearchActive,
-    queryFn: async () => {
-      const firstPageResponse = await api.get<CarsResponse>("/cars", {
-        params: { page: 0, size: PAGE_SIZE },
-      });
-
-      const firstPageData = firstPageResponse.data;
-      if (Array.isArray(firstPageData)) {
-        return firstPageData;
-      }
-
-      const totalPages = Math.max(firstPageData.totalPages ?? 1, 1);
-      if (totalPages <= 1) {
-        return firstPageData.content || [];
-      }
-
-      const remainingRequests = Array.from({ length: totalPages - 1 }, (_, index) =>
-        api.get<CarsResponse>("/cars", {
-          params: { page: index + 1, size: PAGE_SIZE },
-        })
-      );
-
-      const remainingResponses = await Promise.all(remainingRequests);
-      const remainingCars = remainingResponses.flatMap((response) => {
-        const responseData = response.data;
-        return Array.isArray(responseData) ? responseData : responseData.content || [];
-      });
-
-      return [...(firstPageData.content || []), ...remainingCars];
-    },
+  const { data, isLoading, error } = useCarsQuery({
+    page,
+    pageSize,
+    search,
+    searchField,
   });
 
   const content = Array.isArray(data) ? data : data?.content || [];
-  const carsForTable = isSearchActive && !isLoadingAllCars ? allCarsData : content;
   const currentPage = Array.isArray(data) ? 0 : data?.number ?? page;
   const totalPages = Array.isArray(data) ? 1 : Math.max(data?.totalPages ?? 1, 1);
+  const visibleItems = content.length;
+  const totalItems = Array.isArray(data) ? content.length : (data?.totalElements ?? content.length);
 
   return (
     <main className="min-h-screen bg-[var(--color-bg)] p-4 md:p-8">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <AppHeader
-          actions={
-            <>
-            <Button
-              type="button"
-              onClick={() => setIsCreateOpen(true)}
-              className="flex h-9 items-center gap-2 bg-[var(--color-accent)] px-4 text-sm font-bold text-[#111827] transition-all hover:brightness-95"
-            >
-              <Plus size={16} />
-              <span className="hidden sm:inline">{t("addCar")}</span>
-            </Button>
+      <div className="mx-auto max-w-7xl space-y-6">
+        <div className="flex items-center justify-end gap-3">
+          <Button
+            type="button"
+            onClick={() => setIsCreateOpen(true)}
+            className="flex h-9 items-center gap-2 bg-[var(--color-accent)] px-4 text-sm font-bold text-[#111827] transition-all hover:brightness-95"
+          >
+            <Plus size={16} />
+            <span className="hidden sm:inline">{t("addCar")}</span>
+          </Button>
+        </div>
 
-            <LogoutButton />
-            </>
-          }
-        />
+        <div className="fixed right-36 top-4 z-50">
+          <LogoutButton />
+        </div>
 
         <section className="space-y-4">
           {error && (
@@ -115,43 +57,78 @@ export default function CarsPage() {
             </div>
           )}
 
-          {isLoading ? (
-            <div className="flex justify-center py-20">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--color-accent)] border-t-transparent" />
+          <>
+            {isLoading && (
+              <div className="flex justify-center py-20">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--color-accent)] border-t-transparent" />
+              </div>
+            )}
+
+            <CarTable
+              cars={content}
+              search={search}
+              searchField={searchField}
+              onSearchChange={(value) => {
+                setSearch(value);
+                setPage(0);
+              }}
+              onSearchFieldChange={(value) => {
+                setSearchField(value);
+                setPage(0);
+              }}
+            />
+
+            <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-sm text-[var(--color-text)] sm:flex-row sm:items-center sm:justify-between">
+              <p className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-xs text-[var(--color-muted)] sm:text-sm">
+                {t("pagination.showing", { visible: visibleItems, total: totalItems })}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <label htmlFor="page-size" className="text-xs text-[var(--color-muted)] sm:text-sm">
+                  {t("pagination.show")}
+                </label>
+                <select
+                  id="page-size"
+                  value={pageSize}
+                  onChange={(event) => {
+                    setPageSize(Number(event.target.value));
+                    setPage(0);
+                  }}
+                  className="h-9 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-2 text-xs text-[var(--color-text)] sm:text-sm"
+                >
+                  {[10, 20, 50].map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                  disabled={currentPage <= 0}
+                  className="h-9 border-[var(--color-border)] bg-transparent px-3 text-xs text-[var(--color-text)] hover:bg-[var(--color-highlight)] sm:text-sm"
+                >
+                  {t("pagination.previous")}
+                </Button>
+
+                <span className="min-w-14 text-center text-[var(--color-muted)]">
+                  {currentPage + 1} / {totalPages}
+                </span>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                  disabled={currentPage >= totalPages - 1}
+                  className="h-9 border-[var(--color-border)] bg-transparent px-3 text-xs text-[var(--color-text)] hover:bg-[var(--color-highlight)] sm:text-sm"
+                >
+                  {t("pagination.next")}
+                </Button>
+              </div>
             </div>
-          ) : (
-            <>
-              <CarTable cars={carsForTable} search={search} onSearchChange={setSearch} />
-
-              {!isSearchActive && (
-                <div className="mx-auto flex w-[88%] items-center justify-between rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-sm text-[var(--color-text)] sm:w-[84%] md:w-[76%] lg:w-[66%]">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                    disabled={currentPage <= 0}
-                    className="h-9 border-[var(--color-border)] bg-transparent px-3 text-xs text-[var(--color-text)] hover:bg-[var(--color-highlight)] sm:text-sm"
-                  >
-                    {t("pagination.previous")}
-                  </Button>
-
-                  <span className="text-[var(--color-muted)]">
-                    {currentPage + 1} / {totalPages}
-                  </span>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
-                    disabled={currentPage >= totalPages - 1}
-                    className="h-9 border-[var(--color-border)] bg-transparent px-3 text-xs text-[var(--color-text)] hover:bg-[var(--color-highlight)] sm:text-sm"
-                  >
-                    {t("pagination.next")}
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
+          </>
         </section>
 
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>

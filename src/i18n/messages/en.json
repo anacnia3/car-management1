@@ -15,12 +15,14 @@
     "fields": {
       "name": "Full Name",
       "email": "Email",
-      "password": "Password"
+      "password": "Password",
+      "confirmPassword": "Confirm password"
     },
     "placeholders": {
       "name": "Enter your full name",
       "email": "Enter your email address",
-      "password": "Enter your password"
+      "password": "Enter your password",
+      "confirmPassword": "Confirm your password"
     },
     "validation": {
       "nameRequired": "Name is required",
@@ -28,7 +30,9 @@
       "emailRequired": "Email is required",
       "emailInvalid": "Enter a valid email address",
       "passwordRequired": "Password is required",
-      "passwordMin": "Password must be at least 6 characters"
+      "passwordMin": "Password must be at least 6 characters",
+      "confirmPasswordRequired": "Password confirmation is required",
+      "passwordsDoNotMatch": "Passwords do not match"
     },
     "messages": {
       "success": "Action completed successfully!",
@@ -73,13 +77,18 @@
     },
     "pagination": {
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "itemsPerPage": "Items per page",
+      "show": "Show:",
+      "showing": "Showing {visible} of {total}"
     },
     "validation": {
       "required": "Required",
       "brandRequired": "Brand is required",
       "modelRequired": "Model is required",
-      "colorRequired": "Color is required"
+      "colorRequired": "Color is required",
+      "yearRequired": "Year is required",
+      "yearInvalid": "Invalid year"
     },
     "messages": {
       "loading": "Loading ...",
@@ -95,6 +104,9 @@
       "createError": "Error creating car.",
       "updateSuccess": "Car updated!",
       "operationFailed": "Operation failed"
+    },
+    "filters": {
+      "all": "All fields"
     }
   },
   "Common": {

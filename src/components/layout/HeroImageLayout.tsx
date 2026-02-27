@@ -44,7 +44,7 @@ export function HeroImageLayout({
         : [];
 
   return (
-    <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-black">
+    <main className="fixed inset-0 h-dvh w-screen overflow-hidden bg-[var(--color-bg)]">
       {resolvedVideoSources.length > 0 ? (
         <video
           autoPlay
@@ -61,7 +61,7 @@ export function HeroImageLayout({
         </video>
       ) : null}
 
-      <div className={cn("absolute inset-0 z-10 bg-black/50", overlayClassName)} />
+      <div className={cn("absolute inset-0 z-10 bg-black/25 dark:bg-black/50", overlayClassName)} />
 
       {showTitle && (
         <div
@@ -71,7 +71,13 @@ export function HeroImageLayout({
           )}
         >
           <CarFront className="text-[var(--color-accent)]" size={100} />
-          <h1 className={cn(poppins.className, "text-3xl font-black tracking-tight text-white md:text-5xl", titleClassName)}>
+          <h1
+            className={cn(
+              poppins.className,
+              "text-2xl font-black tracking-tight text-[var(--color-text)] md:text-4xl",
+              titleClassName
+            )}
+          >
             {title}
           </h1>
         </div>

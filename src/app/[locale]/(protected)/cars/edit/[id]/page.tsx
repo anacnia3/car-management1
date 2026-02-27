@@ -40,7 +40,7 @@ export default function EditCarPage() {
             {tCars("editTitle")}
           </h1>
           <Link
-            href={`/${localeValue}/cars`}
+            href={`/${localeValue}/cars/details/${idValue}`}
             className="rounded-md border border-[var(--color-border)] px-4 py-2 text-sm font-semibold text-[var(--color-text)] transition hover:bg-[var(--color-highlight)]"
           >
             {tCommon("back")}

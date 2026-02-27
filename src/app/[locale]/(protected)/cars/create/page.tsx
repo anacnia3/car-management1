@@ -3,48 +3,50 @@
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
-import * as z from "zod";
-import { api } from "@/lib/api";
-
-const carSchema = z.object({
-  model: z.string().min(2, "validation.required"),
-  brand: z.string().min(2, "validation.required"),
-  color: z.string().min(2, "validation.required"),
-  year: z.number().min(1886).max(new Date().getFullYear() + 1),
-});
-
-type CreateCarFormData = z.infer<typeof carSchema>;
+import { createCarSchema, CreateCarFormData, CreateCarFormInput } from "@/features/auth/schemas/car.schema";
+import { ApiError } from "@/features/auth/types/api.types";
+import { useCreateCarMutation } from "@/features/auth/hooks/useCarMutations";
 
 export default function CreateCarPage() {
   const t = useTranslations("Cars");
   const { locale } = useParams();
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const createCarMutation = useCreateCarMutation();
 
-  const { register, handleSubmit } = useForm<CreateCarFormData>({
-    resolver: zodResolver(carSchema),
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateCarFormInput, unknown, CreateCarFormData>({
+    resolver: zodResolver(createCarSchema),
   });
 
-  const mutation = useMutation({
-    mutationFn: (newCar: CreateCarFormData) => api.post("/cars", newCar),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cars"] });
+  const onSubmit = async (data: CreateCarFormData) => {
+    try {
+      await createCarMutation.mutateAsync(data);
       toast.success(t("messages.createSuccess"));
       router.push(`/${localeValue}/cars`);
-    },
-    onError: () => toast.error(t("messages.createError")),
-  });
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<ApiError>;
+      const message = axiosError.response?.data?.message;
+      if (message?.startsWith("messages.")) {
+        toast.error(t(message as "messages.createError"));
+      } else {
+        toast.error(t("messages.createError"));
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black p-8 text-white">
       <div className="mx-auto max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-8">
         <h1 className="mb-6 text-2xl font-bold">{t("createTitle")}</h1>
 
-        <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <input
               {...register("brand")}
@@ -67,14 +69,18 @@ export default function CreateCarPage() {
               placeholder={t("fields.year")}
               className="rounded-lg border border-white/10 bg-white/10 p-3 outline-none focus:border-white/40"
             />
+            {errors.year?.message && (
+              <p className="text-xs text-red-400">{t(errors.year.message)}</p>
+            )}
           </div>
 
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
+              disabled={createCarMutation.isPending}
               className="flex-1 rounded-lg bg-white p-3 font-bold text-black hover:bg-white/90"
             >
-              {t("actions.save")}
+              {createCarMutation.isPending ? t("messages.saving") : t("actions.save")}
             </button>
             <button
               type="button"

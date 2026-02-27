@@ -5,9 +5,7 @@ import { format } from "date-fns";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { api } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -19,69 +17,56 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { CarForm } from "./car-form";
-
-type Car = {
-  id: number;
-  brand: string;
-  model: string;
-  color: string;
-  year: number;
-  createdAt?: string;
-};
+import { Car, CarInitialData, SearchField } from "@/features/auth/types/cars.types";
+import { useDeleteCarMutation } from "@/features/auth/hooks/useCarMutations";
 
 type CarsData = Car[] | { content?: Car[] } | undefined;
 
 type CarTableProps = {
   cars: CarsData;
   search: string;
+  searchField: SearchField;
   onSearchChange: (value: string) => void;
+  onSearchFieldChange: (value: SearchField) => void;
 };
 
-export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
+export function CarTable({ cars, search, searchField, onSearchChange, onSearchFieldChange }: CarTableProps) {
   const t = useTranslations("Cars");
-  const queryClient = useQueryClient();
+  const deleteCarMutation = useDeleteCarMutation();
   const router = useRouter();
   const { locale } = useParams();
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
   const [carToDelete, setCarToDelete] = useState<number | null>(null);
-  const [carToEdit, setCarToEdit] = useState<Car | null>(null);
+  const [carToEdit, setCarToEdit] = useState<CarInitialData | null>(null);
 
   const carList = useMemo(() => {
     return Array.isArray(cars) ? cars : cars?.content || [];
   }, [cars]);
   const filteredCars = useMemo(() => {
     const query = search.trim().toLowerCase();
-
-    if (!query) {
-      return carList;
-    }
+    if (!query) return carList;
 
     return carList.filter((car) => {
-      const composed = `${car.brand} ${car.model} ${car.color} ${car.year}`.toLowerCase();
-      return composed.includes(query);
+      if (searchField === "brand") return car.brand.toLowerCase().includes(query);
+      if (searchField === "model") return car.model.toLowerCase().includes(query);
+      if (searchField === "color") return car.color.toLowerCase().includes(query);
+      if (searchField === "year") return String(car.year).includes(query);
+      return `${car.brand} ${car.model} ${car.color} ${car.year}`.toLowerCase().includes(query);
     });
-  }, [carList, search]);
+  }, [carList, search, searchField]);
+  const handleDelete = async () => {
+    if (!carToDelete) return;
 
-  const deleteMutation = useMutation({
-    mutationFn: async (carId: number) => {
-      await api.delete(`/cars/${carId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cars"] });
+    try {
+      await deleteCarMutation.mutateAsync(carToDelete);
       toast.success(t("messages.deleted"), {
         autoClose: 3000,
         theme: "dark",
       });
       setCarToDelete(null);
-    },
-    onError: () => {
+    } catch {
       toast.error(t("messages.error"));
-    },
-  });
-
-  const handleDelete = () => {
-    if (!carToDelete) return;
-    deleteMutation.mutate(carToDelete);
+    }
   };
 
   const handleEdit = (id: number) => {
@@ -94,32 +79,45 @@ export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
   };
 
   return (
-    <div className="mx-auto w-[88%] overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-2xl dark:text-white sm:w-[84%] md:w-[76%] lg:w-[66%]">
-      <div className="border-b border-[var(--color-border)] p-3">
-        <Input
-          value={search}
-          onChange={(event) => onSearchChange(event.target.value)}
-          placeholder={t("searchPlaceholder")}
-          className="h-9 border border-[var(--color-border)] bg-[var(--color-bg)] px-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-muted)] focus-visible:ring-[var(--color-highlight)]"
-        />
+    <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-sm">
+      <div className="border-b border-[var(--color-border)] p-4">
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <select
+            value={searchField}
+            onChange={(event) => onSearchFieldChange(event.target.value as SearchField)}
+            className="h-10 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)]"
+          >
+            <option value="all">{t("filters.all")}</option>
+            <option value="brand">{t("fields.brand")}</option>
+            <option value="model">{t("fields.model")}</option>
+            <option value="color">{t("fields.color")}</option>
+            <option value="year">{t("fields.year")}</option>
+          </select>
+          <Input
+            value={search}
+            onChange={(event) => onSearchChange(event.target.value)}
+            placeholder={t("searchPlaceholder")}
+            className="h-10 border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-muted)] focus-visible:ring-[var(--color-highlight)]"
+          />
+        </div>
       </div>
 
       <table className="w-full border-collapse text-left">
-        <thead className="bg-[#FDE047] text-[10px] uppercase tracking-widest text-[#111827] md:text-[11px]">
+        <thead className="bg-[var(--color-bg)] text-[11px] text-[var(--color-muted)]">
           <tr>
-            <th className="p-3 font-bold md:p-4">{t("fields.brand")}</th>
-            <th className="p-3 font-bold md:p-4">{t("fields.model")}</th>
-            <th className="p-3 font-bold md:p-4">{t("fields.color")}</th>
-            <th className="p-3 font-bold md:p-4">{t("fields.year")}</th>
-            <th className="p-3 font-bold md:p-4">{t("fields.createdAt")}</th>
-            <th className="p-3 text-right font-bold md:p-4">{t("fields.actions")}</th>
+            <th className="p-3 font-semibold md:p-4">{t("fields.brand")}</th>
+            <th className="p-3 font-semibold md:p-4">{t("fields.model")}</th>
+            <th className="p-3 font-semibold md:p-4">{t("fields.color")}</th>
+            <th className="p-3 font-semibold md:p-4">{t("fields.year")}</th>
+            <th className="p-3 font-semibold md:p-4">{t("fields.createdAt")}</th>
+            <th className="p-3 text-right font-semibold md:p-4">{t("fields.actions")}</th>
           </tr>
         </thead>
-        <tbody className="text-sm text-[var(--color-muted)] dark:text-white">
+        <tbody className="text-sm text-[var(--color-muted)]">
           {filteredCars.map((car) => (
             <tr
               key={car.id}
-              className="border-b border-[var(--color-border)] transition-colors hover:bg-[var(--color-highlight)]/10"
+              className="border-b border-[var(--color-border)] transition-colors hover:bg-[var(--color-bg)]"
             >
               <td className="p-3 font-medium text-[var(--color-text)] md:p-4">{car.brand}</td>
               <td className="p-3 md:p-4">{car.model}</td>
@@ -149,7 +147,7 @@ export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
                   <button
                     onClick={() => setCarToDelete(car.id)}
                     className="cursor-pointer transition-all hover:text-red-500"
-                    disabled={deleteMutation.isPending}
+                    disabled={deleteCarMutation.isPending}
                     title={t("actions.delete")}
                     aria-label={t("actions.delete")}
                   >
@@ -161,7 +159,7 @@ export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
           ))}
           {filteredCars.length === 0 && (
             <tr>
-              <td colSpan={6} className="p-6 text-center text-sm text-[var(--color-muted)] dark:text-white">
+              <td colSpan={6} className="p-6 text-center text-sm text-[var(--color-muted)]">
                 {t("empty")}
               </td>
             </tr>
@@ -189,7 +187,7 @@ export function CarTable({ cars, search, onSearchChange }: CarTableProps) {
             <Button
               type="button"
               onClick={handleDelete}
-              disabled={deleteMutation.isPending}
+              disabled={deleteCarMutation.isPending}
               className="bg-[var(--color-success)] text-[#111827] hover:brightness-95"
             >
               {t("actions.delete")}

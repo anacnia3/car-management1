@@ -2,26 +2,15 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { AxiosError } from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
-import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const carSchema = z.object({
-  brand: z.string().min(2, "validation.brandRequired"),
-  model: z.string().min(2, "validation.modelRequired"),
-  color: z.string().min(2, "validation.colorRequired"),
-  year: z.number().min(1886).max(new Date().getFullYear() + 1),
-});
-
-type CarFormData = z.infer<typeof carSchema>;
-type ApiError = { message?: string };
-
-type CarInitialData = CarFormData & { id: number };
+import { carFormSchema, CarFormData, CarFormInput } from "@/features/auth/schemas/car.schema";
+import { ApiError } from "@/features/auth/types/api.types";
+import { CarInitialData } from "@/features/auth/types/cars.types";
+import { useCreateCarMutation, useUpdateCarMutation } from "@/features/auth/hooks/useCarMutations";
 
 interface CarFormProps {
   initialData?: CarInitialData;
@@ -30,7 +19,8 @@ interface CarFormProps {
 
 export function CarForm({ initialData, onSuccess }: CarFormProps) {
   const t = useTranslations("Cars");
-  const queryClient = useQueryClient();
+  const createCarMutation = useCreateCarMutation();
+  const updateCarMutation = useUpdateCarMutation();
   const isEditing = !!initialData;
   const resolveCarErrorMessage = (message?: string) => {
     if (!message) return t("messages.operationFailed");
@@ -44,8 +34,8 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CarFormData>({
-    resolver: zodResolver(carSchema),
+  } = useForm<CarFormInput, unknown, CarFormData>({
+    resolver: zodResolver(carFormSchema),
     defaultValues: initialData || {
       brand: "",
       model: "",
@@ -54,27 +44,26 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: async (data: CarFormData) => {
+  const onSubmit = async (data: CarFormData) => {
+    try {
       if (isEditing && initialData) {
-        return api.put(`/cars/${initialData.id}`, data);
+        await updateCarMutation.mutateAsync({ id: initialData.id, payload: data });
+      } else {
+        await createCarMutation.mutateAsync(data);
       }
-      return api.post("/cars", data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cars"] });
       toast.success(isEditing ? t("messages.updateSuccess") : t("messages.createSuccess"));
       onSuccess();
-    },
-    onError: (error: unknown) => {
+    } catch (error: unknown) {
       const axiosError = error as AxiosError<ApiError>;
       toast.error(resolveCarErrorMessage(axiosError.response?.data?.message));
-    },
-  });
+    }
+  };
+
+  const isPending = createCarMutation.isPending || updateCarMutation.isPending;
 
   return (
     <form
-      onSubmit={handleSubmit((data) => mutation.mutate(data))}
+      onSubmit={handleSubmit(onSubmit)}
       className="space-y-4 pt-4"
     >
       <div className="grid grid-cols-2 gap-4">
@@ -112,7 +101,7 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
             type="number"
             className="border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-text)] dark:text-white"
           />
-          {errors.year?.message && <p className="text-[10px] text-red-500">{errors.year.message}</p>}
+          {errors.year?.message && <p className="text-[10px] text-red-500">{t(errors.year.message)}</p>}
         </div>
       </div>
 
@@ -125,12 +114,12 @@ export function CarForm({ initialData, onSuccess }: CarFormProps) {
         >
           {t("actions.cancel")}
         </Button>
-        <Button
+          <Button
           type="submit"
-          disabled={mutation.isPending}
+          disabled={isPending}
           className="bg-[var(--color-accent)] font-bold text-[#111827] hover:brightness-95"
         >
-          {mutation.isPending ? t("messages.saving") : isEditing ? t("actions.update") : t("actions.save")}
+          {isPending ? t("messages.saving") : isEditing ? t("actions.update") : t("actions.save")}
         </Button>
       </div>
     </form>

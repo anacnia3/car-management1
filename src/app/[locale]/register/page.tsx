@@ -12,20 +12,24 @@ export default function RegisterPage() {
   const localeValue = Array.isArray(locale) ? locale[0] : locale;
 
   return (
-    <HeroImageLayout>
-      <div className="w-full max-w-[450px] rounded-2xl bg-white p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t("register")}</h1>
-          <p className="mt-2 text-sm text-gray-500">{t("registerSubtitle")}</p>
+    <HeroImageLayout
+      titleWrapperClassName="top-10 gap-2 md:top-12 [&>svg]:size-10 md:[&>svg]:size-12"
+      titleClassName="text-lg md:text-2xl"
+      contentClassName="items-center justify-center pt-8 md:pt-10"
+    >
+      <div className="w-full max-w-[320px] rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 shadow-[0_20px_50px_rgba(0,0,0,0.3)] md:p-4">
+        <div className="mb-3 text-center">
+          <h1 className="text-base font-bold tracking-tight text-[var(--color-text)] md:text-lg">{t("register")}</h1>
+          <p className="mt-0.5 text-[11px] text-[var(--color-muted)] md:text-xs">{t("registerSubtitle")}</p>
         </div>
 
         <RegisterForm />
 
-        <div className="mt-8 border-t border-gray-100 pt-6 text-center text-sm text-gray-600">
+        <div className="mt-3 border-t border-[var(--color-border)] pt-2.5 text-center text-[11px] text-[var(--color-muted)] md:text-xs">
           {t("hasAccount")}{" "}
           <Link
             href={`/${localeValue}/login`}
-            className="font-bold text-blue-600 transition-all hover:underline"
+            className="font-bold text-[var(--color-highlight)] transition-all hover:underline"
           >
             {t("loginNow")}
           </Link>

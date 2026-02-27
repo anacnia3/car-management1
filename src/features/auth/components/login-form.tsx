@@ -31,14 +31,14 @@ export function LoginForm() {
 
   return (
     <div className="space-y-4">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-3">
         <div className="space-y-0.5 text-left">
           <label className="ml-1 text-[11px] font-bold uppercase tracking-wider text-gray-700 md:text-xs">
             {t("fields.email")}
           </label>
           <Input
             {...register("email")}
-            type="email"
+            type="text"
             placeholder={t("placeholders.email")}
             className="h-9 border border-gray-300 bg-white px-3 text-xs text-black placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-gray-300 md:text-sm"
           />
